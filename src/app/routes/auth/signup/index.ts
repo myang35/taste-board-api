@@ -4,7 +4,7 @@ import {
   InvalidInputsErrorInput,
 } from "@src/app/errors/invalid-inputs-error";
 import { userService } from "@src/app/services/user-service";
-import { requestHandler } from "@src/app/utils/request-handler";
+import { requestHandler } from "@src/app/wrappers/request-handler";
 import express from "express";
 
 const PATH = "/signup";

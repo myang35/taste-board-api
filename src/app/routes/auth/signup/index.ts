@@ -6,7 +6,7 @@ import {
   InvalidInputsError,
   InvalidInputsErrorInput,
 } from "../../../errors/invalid-inputs-error";
-import { User } from "../../../models/user";
+import { userService } from "../../../services/user-service";
 
 export const signupRoute: RequestHandler = async (req, res) => {
   const { email, password } = req.body;
@@ -20,11 +20,10 @@ export const signupRoute: RequestHandler = async (req, res) => {
   const hashPassword = await bcrypt.hash(password, 10);
 
   try {
-    const userDoc = new User({
+    const userDoc = await userService.create({
       email,
       password: hashPassword,
     });
-    await userDoc.save();
     const userDto = UserDto.fromDoc(userDoc);
 
     const token = jwt.sign({ user: userDto }, "privatekey", {
@@ -33,7 +32,6 @@ export const signupRoute: RequestHandler = async (req, res) => {
 
     res.json({ user: userDto, token });
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       error: "DB_ERROR",
       message: (() => {

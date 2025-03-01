@@ -14,7 +14,7 @@ export const signupRouter = express.Router().post(
   requestHandler(async (req, res) => {
     const { email, password } = req.body;
 
-    const error = validateInputs(req.body);
+    const error = await validateInputs(req.body);
     if (error) {
       res.status(400).json(error);
       return;
@@ -30,10 +30,18 @@ export const signupRouter = express.Router().post(
   })
 );
 
-function validateInputs(inputs: any) {
+async function validateInputs(inputs: any) {
   const inputErrors: InvalidInputsErrorInput[] = [];
 
-  if (!inputs.email) {
+  if (inputs.email) {
+    const existingUserDoc = await userService.getByEmail(inputs.email);
+    if (existingUserDoc) {
+      inputErrors.push({
+        name: "email",
+        message: "This email is already taken",
+      });
+    }
+  } else {
     inputErrors.push({
       name: "email",
       message: "Required",

@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import type { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
-import { UserDto } from "../../../dto/user";
+import { UserDto } from "../../../dto/user-dto";
 import {
   InvalidInputsError,
   InvalidInputsErrorInput,

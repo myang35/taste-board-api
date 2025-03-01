@@ -1,5 +1,5 @@
 import { HydratedDocument } from "mongoose";
-import type { IUser } from "../../models/user";
+import type { IUser } from "../models/user";
 
 export class UserDto {
   id: string;

@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import type { RequestHandler } from "express";
+import express from "express";
 import jwt from "jsonwebtoken";
 import { UserDto } from "../../../dto/user-dto";
 import {
@@ -8,7 +8,9 @@ import {
 } from "../../../errors/invalid-inputs-error";
 import { userService } from "../../../services/user-service";
 
-export const signupRoute: RequestHandler = async (req, res) => {
+const PATH = "/signup";
+
+export const signupRouter = express.Router().post(PATH, async (req, res) => {
   const { email, password } = req.body;
 
   const error = validateInputs(req.body);
@@ -41,7 +43,7 @@ export const signupRoute: RequestHandler = async (req, res) => {
       })(),
     });
   }
-};
+});
 
 function validateInputs(inputs: any) {
   const inputErrors: InvalidInputsErrorInput[] = [];

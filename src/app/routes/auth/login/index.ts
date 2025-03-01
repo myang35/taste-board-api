@@ -1,5 +1,7 @@
-import type { RequestHandler } from "express";
+import express from "express";
 
-export const loginRoute: RequestHandler = (req, res) => {
+const PATH = "/login";
+
+export const loginRouter = express.Router().post(PATH, (req, res) => {
   res.json({ success: true });
-};
+});

@@ -2,6 +2,6 @@ import express from "express";
 import { loginRouter } from "./login";
 import { signupRouter } from "./signup";
 
-export const authRouter = express.Router();
+const PATH = "/auth";
 
-authRouter.use(loginRouter, signupRouter);
+export const authRouter = express.Router().use(PATH, loginRouter, signupRouter);

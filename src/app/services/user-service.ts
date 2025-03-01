@@ -1,4 +1,4 @@
-import { IUser, User } from "../models/user";
+import { IUser, User } from "@src/app/models/user";
 
 export const userService = {
   getById: async (id: string) => {

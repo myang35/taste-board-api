@@ -1,4 +1,4 @@
-import { MissingEnvVariableError } from "../errors/missing-env-variable-error";
+import { MissingEnvVariableError } from "@src/config/errors/missing-env-variable-error";
 
 export function requireVar(envVariable: string) {
   const result = process.env[envVariable];

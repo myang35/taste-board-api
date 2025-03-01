@@ -1,12 +1,12 @@
-import bcrypt from "bcrypt";
-import express from "express";
-import jwt from "jsonwebtoken";
-import { UserDto } from "../../../dto/user-dto";
+import { UserDto } from "@src/app/dto/user-dto";
 import {
   InvalidInputsError,
   InvalidInputsErrorInput,
-} from "../../../errors/invalid-inputs-error";
-import { userService } from "../../../services/user-service";
+} from "@src/app/errors/invalid-inputs-error";
+import { userService } from "@src/app/services/user-service";
+import bcrypt from "bcrypt";
+import express from "express";
+import jwt from "jsonwebtoken";
 
 const PATH = "/signup";
 

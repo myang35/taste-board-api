@@ -5,20 +5,21 @@ import {
   InvalidInputsErrorInput,
 } from "@src/app/errors/invalid-inputs-error";
 import { userService } from "@src/app/services/user-service";
+import { requestHandler } from "@src/app/utils/request-handler";
 import express from "express";
 
 const PATH = "/login";
 
-export const loginRouter = express.Router().post(PATH, async (req, res) => {
-  const { email, password } = req.body;
+export const loginRouter = express.Router().post(
+  PATH,
+  requestHandler(async (req, res) => {
+    const { email, password } = req.body;
 
-  const error = validateInputs(req.body);
-  if (error) {
-    res.status(400).json(error);
-    return;
-  }
-
-  try {
+    const error = validateInputs(req.body);
+    if (error) {
+      res.status(400).json(error);
+      return;
+    }
     const userDoc = await userService.getByEmail(email);
     if (!userDoc) {
       res.status(404).json(new InvalidCredentialsError());
@@ -33,18 +34,10 @@ export const loginRouter = express.Router().post(PATH, async (req, res) => {
 
     const userDto = UserDto.fromDoc(userDoc);
     const token = await userService.createAuthToken(userDoc);
+
     res.json({ user: userDto, token });
-  } catch (error) {
-    res.status(500).json({
-      error: "DB_ERROR",
-      message: (() => {
-        if (error instanceof Error) return error.message;
-        if (typeof error === "string") return error;
-        return "Unknown error";
-      })(),
-    });
-  }
-});
+  })
+);
 
 function validateInputs(inputs: any) {
   const inputErrors: InvalidInputsErrorInput[] = [];

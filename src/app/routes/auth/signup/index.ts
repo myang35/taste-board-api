@@ -3,7 +3,6 @@ import {
   InvalidInputsError,
   InvalidInputsErrorInput,
 } from "@src/app/errors/invalid-inputs-error";
-import { authService } from "@src/app/services/auth-service";
 import { userService } from "@src/app/services/user-service";
 import express from "express";
 
@@ -24,7 +23,7 @@ export const signupRouter = express.Router().post(PATH, async (req, res) => {
       password,
     });
     const userDto = UserDto.fromDoc(userDoc);
-    const token = await authService.login(userDoc);
+    const token = await userService.createAuthToken(userDoc);
     res.json({ user: userDto, token });
   } catch (error) {
     res.status(500).json({
@@ -32,7 +31,7 @@ export const signupRouter = express.Router().post(PATH, async (req, res) => {
       message: (() => {
         if (error instanceof Error) return error.message;
         if (typeof error === "string") return error;
-        return "Failed to create user";
+        return "Unknown error";
       })(),
     });
   }

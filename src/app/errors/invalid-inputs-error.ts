@@ -8,10 +8,10 @@ export interface InvalidInputsErrorInput {
 export class InvalidInputsError extends BaseError<{
   inputs: InvalidInputsErrorInput[];
 }> {
-  constructor(params: { message?: string; inputs: InvalidInputsErrorInput[] }) {
+  constructor(params: { inputs: InvalidInputsErrorInput[] }) {
     super({
-      error: "INVALID_INPUTS_ERROR",
-      message: params.message ?? "Invalid inputs",
+      error: "INVALID_INPUTS",
+      message: "Invalid inputs",
       data: {
         inputs: params.inputs,
       },

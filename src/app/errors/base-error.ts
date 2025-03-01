@@ -1,4 +1,4 @@
-export class BaseError<DataType = any> {
+export class BaseError<DataType = undefined> {
   error: string;
   message: string;
   data: DataType;

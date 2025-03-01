@@ -3,9 +3,9 @@ import {
   InvalidInputsError,
   InvalidInputsErrorInput,
 } from "@src/app/errors/invalid-inputs-error";
+import { authService } from "@src/app/services/auth-service";
 import { userService } from "@src/app/services/user-service";
 import express from "express";
-import jwt from "jsonwebtoken";
 
 const PATH = "/signup";
 
@@ -24,11 +24,7 @@ export const signupRouter = express.Router().post(PATH, async (req, res) => {
       password,
     });
     const userDto = UserDto.fromDoc(userDoc);
-
-    const token = jwt.sign({ user: userDto }, "privatekey", {
-      expiresIn: "2h",
-    });
-
+    const token = await authService.login(userDoc);
     res.json({ user: userDto, token });
   } catch (error) {
     res.status(500).json({

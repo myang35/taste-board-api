@@ -4,7 +4,6 @@ import {
   InvalidInputsErrorInput,
 } from "@src/app/errors/invalid-inputs-error";
 import { userService } from "@src/app/services/user-service";
-import bcrypt from "bcrypt";
 import express from "express";
 import jwt from "jsonwebtoken";
 
@@ -19,12 +18,10 @@ export const signupRouter = express.Router().post(PATH, async (req, res) => {
     return;
   }
 
-  const hashPassword = await bcrypt.hash(password, 10);
-
   try {
     const userDoc = await userService.create({
       email,
-      password: hashPassword,
+      password,
     });
     const userDto = UserDto.fromDoc(userDoc);
 

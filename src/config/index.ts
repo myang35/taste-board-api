@@ -4,7 +4,6 @@ import { requireVar } from "./utils/require-var";
 
 export const config = {
   jwtSecret: requireVar("JWT_SECRET"),
-  mongoUsername: requireVar("MONGO_USERNAME"),
-  mongoPassword: requireVar("MONGO_PASSWORD"),
+  mongodbUri: requireVar("MONGODB_URI"),
   ...(process.env.NODE_ENV === "production" ? prodConfig : devConfig),
 };

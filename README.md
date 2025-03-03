@@ -19,8 +19,7 @@ git config core.hooksPath .git-hooks
 
 ```
 JWT_SECRET=[JWT Secret Key]
-MONGO_USERNAME=[MongoDB Atlas Username]
-MONGO_PASSWORD=[MongoDB Atlas Password]
+MONGODB_URI=[MongoDB URI/Connection String]
 ```
 
 ## Development notes

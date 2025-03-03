@@ -11,6 +11,18 @@ yarn
 git config core.hooksPath .git-hooks
 ```
 
+### Setup Environment
+
+1. Create a `.env` file in the project's root directory.
+
+2. The `.env` file should have the following variables set:
+
+```
+JWT_SECRET=[JWT Secret Key]
+MONGO_USERNAME=[MongoDB Atlas Username]
+MONGO_PASSWORD=[MongoDB Atlas Password]
+```
+
 ## Development notes
 
 ### Git Commit Messages

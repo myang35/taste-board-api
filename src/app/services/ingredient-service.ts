@@ -1,8 +1,14 @@
 import { IIngredient, Ingredient } from "@src/app/models/ingredient";
 
 export const ingredientService = {
-  getAll: async () => {
-    return Ingredient.find();
+  getAll: async (options?: { distinct?: string }) => {
+    const query = Ingredient.find();
+
+    if (options?.distinct) {
+      query.distinct(options.distinct);
+    }
+
+    return query;
   },
   get: async (id: string) => {
     return Ingredient.findById(id);

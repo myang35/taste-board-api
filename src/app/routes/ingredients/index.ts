@@ -13,8 +13,23 @@ ingredientsRouter
   .route(PATH)
   .get(
     requestHandler(async (req, res) => {
+      const query = {
+        distinct: (() => {
+          if (req.query.distinct instanceof Array) {
+            return req.query.distinct[0] as string | undefined;
+          }
+          return req.query.distinct as string | undefined;
+        })(),
+      };
+
       if (!req.params.ingredientId) {
-        const ingredientDocs = await ingredientService.getAll();
+        const ingredientDocs = await ingredientService.getAll(query);
+
+        if (query.distinct) {
+          res.json(ingredientDocs);
+          return;
+        }
+
         const ingredientDtos = ingredientDocs.map(IngredientDto.fromDoc);
         res.json(ingredientDtos);
         return;

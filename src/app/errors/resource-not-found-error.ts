@@ -5,7 +5,7 @@ export class ResourceNotFoundError extends BaseError {
   constructor(params: { resource: string }) {
     super({
       error: "RESOURCE_NOT_FOUND",
-      message: `${stringUtils.firstUpper(params.resource)} is not found`,
+      message: `${stringUtils.firstUpper(params.resource)} not found`,
     });
   }
 }

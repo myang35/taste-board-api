@@ -1,5 +1,4 @@
 import type { IUser } from "@src/app/models/user";
-import { HydratedDocument } from "mongoose";
 
 export class UserDto {
   id: string;
@@ -10,9 +9,9 @@ export class UserDto {
     this.email = params.email;
   }
 
-  static fromDoc(userDoc: HydratedDocument<IUser>) {
+  static fromDoc(userDoc: IUser) {
     return new UserDto({
-      id: userDoc.id,
+      id: userDoc._id,
       email: userDoc.email,
     });
   }

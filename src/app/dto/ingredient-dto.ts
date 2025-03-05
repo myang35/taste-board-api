@@ -1,5 +1,4 @@
 import { IIngredient } from "@src/app/models/ingredient";
-import { HydratedDocument } from "mongoose";
 
 export class IngredientDto {
   id: string;
@@ -19,9 +18,9 @@ export class IngredientDto {
     this.description = params.description ?? "";
   }
 
-  static fromDoc(ingredientDoc: HydratedDocument<IIngredient>) {
+  static fromDoc(ingredientDoc: IIngredient) {
     return new IngredientDto({
-      id: ingredientDoc.id,
+      id: ingredientDoc._id,
       name: ingredientDoc.name,
       category: ingredientDoc.category,
       description: ingredientDoc.description,

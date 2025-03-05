@@ -1,4 +1,4 @@
-import { IIngredient, Ingredient } from "@src/app/models/ingredient";
+import { Ingredient } from "@src/app/models/ingredient";
 
 export const ingredientService = {
   getAll: async (options?: { distinct?: string }) => {
@@ -13,10 +13,19 @@ export const ingredientService = {
   get: async (id: string) => {
     return Ingredient.findById(id);
   },
-  create: async (ingredients: IIngredient[]) => {
-    return Ingredient.insertMany(ingredients, {
-      ordered: false,
-    }).catch((error) => {
+  create: async (
+    ingredients: { name: string; category?: string; description?: string }[]
+  ) => {
+    return Ingredient.insertMany(
+      {
+        category: "",
+        description: "",
+        ...ingredients,
+      },
+      {
+        ordered: false,
+      }
+    ).catch((error) => {
       if (error.insertedDocs) {
         return error.insertedDocs;
       }
@@ -26,7 +35,10 @@ export const ingredientService = {
   delete: async (id: string) => {
     return Ingredient.findByIdAndDelete(id);
   },
-  update: async (id: string, ingredient: Partial<IIngredient>) => {
+  update: async (
+    id: string,
+    ingredient: { name?: string; category?: string; description?: string }
+  ) => {
     return Ingredient.findByIdAndUpdate(id, ingredient, { new: true });
   },
 };

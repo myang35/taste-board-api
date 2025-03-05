@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 
 export interface IIngredient {
+  _id: string;
   name: string;
-  category?: string;
-  description?: string;
+  category: string;
+  description: string;
 }
 
 export const ingredientSchema = new mongoose.Schema<IIngredient>({

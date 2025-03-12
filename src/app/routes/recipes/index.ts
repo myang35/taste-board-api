@@ -10,12 +10,10 @@ import { userService } from "@src/app/services/user-service";
 import { requestHandler } from "@src/app/wrappers/request-handler";
 import express from "express";
 
-const PATH = "/recipes/:recipeId?";
-
 export const recipesRouter = express.Router();
 
 recipesRouter
-  .route(PATH)
+  .route("/:recipeId?")
   .get(
     requestHandler(async (req, res) => {
       if (!req.params.recipeId) {

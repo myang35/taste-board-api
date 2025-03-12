@@ -5,12 +5,10 @@ import { ingredientService } from "@src/app/services/ingredient-service";
 import { requestHandler } from "@src/app/wrappers/request-handler";
 import express from "express";
 
-const PATH = "/ingredients/:ingredientId?";
-
 export const ingredientsRouter = express.Router();
 
 ingredientsRouter
-  .route(PATH)
+  .route("/:ingredientId?")
   .get(
     requestHandler(async (req, res) => {
       const query = {

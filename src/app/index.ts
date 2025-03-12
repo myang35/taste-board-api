@@ -15,8 +15,8 @@ app.use(
   })
 );
 
-app.use(authRouter);
-app.use(ingredientsRouter);
-app.use(recipesRouter);
+app.use("/auth", authRouter);
+app.use("/ingredients", ingredientsRouter);
+app.use("/recipes", recipesRouter);
 
 app.use(errorHandler);

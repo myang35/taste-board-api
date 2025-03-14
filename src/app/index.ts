@@ -1,4 +1,5 @@
 import { config } from "@src/config";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import { errorHandler } from "./middleware/error-handler";
@@ -14,6 +15,7 @@ app.use(
     origin: config.corsOrigin,
   })
 );
+app.use(cookieParser());
 
 app.use("/auth", authRouter);
 app.use("/ingredients", ingredientsRouter);

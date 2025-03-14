@@ -4,6 +4,7 @@ import {
   InvalidInputsError,
   InvalidInputsErrorInput,
 } from "@src/app/errors/invalid-inputs-error";
+import { UnauthenticatedError } from "@src/app/errors/unauthenticated-error";
 import { userService } from "@src/app/services/user-service";
 import { requestHandler } from "@src/app/wrappers/request-handler";
 import express from "express";
@@ -36,10 +37,19 @@ authRouter
         return;
       }
 
+      const [refreshToken, accessToken] = await Promise.all([
+        userService.createRefreshToken(userDoc._id),
+        userService.createAccessToken(userDoc),
+      ]);
       const userDto = UserDto.fromDoc(userDoc);
-      const token = await userService.createAuthToken(userDoc);
 
-      res.json({ user: userDto, token });
+      res.cookie("refreshToken", refreshToken.value, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        expires: refreshToken.expireAt,
+      });
+      res.json({ user: userDto, token: accessToken });
 
       function validateInputs(inputs: any) {
         const inputErrors: InvalidInputsErrorInput[] = [];
@@ -81,9 +91,19 @@ authRouter
         email,
         password,
       });
+      const [refreshToken, accessToken] = await Promise.all([
+        userService.createRefreshToken(userDoc._id),
+        userService.createAccessToken(userDoc),
+      ]);
       const userDto = UserDto.fromDoc(userDoc);
-      const token = await userService.createAuthToken(userDoc);
-      res.json({ user: userDto, token });
+
+      res.cookie("refreshToken", refreshToken.value, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        expires: refreshToken.expireAt,
+      });
+      res.json({ user: userDto, token: accessToken });
 
       async function validateInputs(inputs: any) {
         const inputErrors: InvalidInputsErrorInput[] = [];
@@ -116,5 +136,42 @@ authRouter
 
         return null;
       }
+    })
+  )
+  .post(
+    "/refresh",
+    requestHandler(async (req, res) => {
+      const { refreshToken } = req.cookies;
+      if (!refreshToken) {
+        res.status(401).json(
+          new UnauthenticatedError({
+            message: "Refresh token is missing",
+          })
+        );
+        return;
+      }
+
+      if (typeof refreshToken !== "string") {
+        res.status(401).json(
+          new UnauthenticatedError({
+            message: "Refresh token is invalid",
+          })
+        );
+        return;
+      }
+
+      const userDoc = await userService.getByRefreshToken(refreshToken);
+      if (!userDoc) {
+        res.status(404).json(
+          new UnauthenticatedError({
+            message: "Refresh token or user is not found",
+          })
+        );
+        return;
+      }
+
+      const accessToken = await userService.createAccessToken(userDoc);
+      const userDto = UserDto.fromDoc(userDoc);
+      res.json({ user: userDto, token: accessToken });
     })
   );

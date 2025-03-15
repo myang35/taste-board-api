@@ -34,7 +34,7 @@ recipesRouter
   )
   .post(
     requestHandler(async (req, res) => {
-      const { name, authorId } = req.body;
+      const { name, authorId, description, imageUrl } = req.body;
 
       const invalidInputs: InvalidInputsErrorInput[] = [];
       if (!name) {
@@ -60,11 +60,18 @@ recipesRouter
         return;
       }
 
-      const recipeDoc = await recipeService.create({ name, authorId });
+      const recipeDoc = await recipeService.create({
+        name,
+        authorId,
+        description,
+        imageUrl,
+      });
       const recipeDto = new RecipeDto({
         id: recipeDoc._id,
-        name: recipeDoc.name,
         author: UserDto.fromDoc(authorDoc),
+        name: recipeDoc.name,
+        description: recipeDoc.description,
+        imageUrl: recipeDoc.imageUrl,
         createdAt: recipeDoc.createdAt.toISOString(),
         updatedAt: recipeDoc.updatedAt.toISOString(),
       });

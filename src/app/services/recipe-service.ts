@@ -8,10 +8,17 @@ export const recipeService = {
   get: async (id: string) => {
     return Recipe.findById(id).populate<{ author: IUser }>("author").lean();
   },
-  create: async (recipe: { name: string; authorId: string }) => {
+  create: async (recipe: {
+    name: string;
+    authorId: string;
+    description?: string;
+    imageUrl?: string;
+  }) => {
     const recipeDoc = await Recipe.create({
       name: recipe.name,
       author: recipe.authorId,
+      description: recipe.description,
+      imageUrl: recipe.imageUrl,
     });
     return recipeDoc;
   },

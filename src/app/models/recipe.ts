@@ -3,8 +3,10 @@ import { IUser } from "./user";
 
 export interface IRecipe {
   _id: string;
-  name: string;
   author: mongoose.Schema.Types.ObjectId;
+  name: string;
+  description: string;
+  imageUrl: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -15,14 +17,20 @@ export interface IRecipePopulated extends Omit<IRecipe, "author"> {
 
 export const recipeSchema = new mongoose.Schema<IRecipe>(
   {
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     name: {
       type: String,
       required: true,
       unique: true,
     },
-    author: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+    description: {
+      type: String,
+    },
+    imageUrl: {
+      type: String,
     },
   },
   {

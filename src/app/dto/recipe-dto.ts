@@ -4,21 +4,27 @@ import { UserDto } from "./user-dto";
 
 export class RecipeDto {
   id: string;
-  name: string;
   author: mongoose.Schema.Types.ObjectId | UserDto;
+  name: string;
+  description: string;
+  imageUrl: string;
   createdAt: string;
   updatedAt: string;
 
   constructor(params: {
     id: string;
-    name: string;
     author: UserDto;
+    name: string;
+    description: string;
+    imageUrl: string;
     createdAt: string;
     updatedAt: string;
   }) {
     this.id = params.id;
-    this.name = params.name;
     this.author = params.author;
+    this.name = params.name;
+    this.description = params.description;
+    this.imageUrl = params.imageUrl;
     this.createdAt = params.createdAt;
     this.updatedAt = params.updatedAt;
   }
@@ -26,11 +32,13 @@ export class RecipeDto {
   static fromDoc(recipeDoc: IRecipePopulated) {
     return new RecipeDto({
       id: recipeDoc._id,
-      name: recipeDoc.name,
       author: new UserDto({
         id: recipeDoc.author._id,
         email: recipeDoc.author.email,
       }),
+      name: recipeDoc.name,
+      description: recipeDoc.description,
+      imageUrl: recipeDoc.imageUrl,
       createdAt: recipeDoc.createdAt.toISOString(),
       updatedAt: recipeDoc.updatedAt.toISOString(),
     });

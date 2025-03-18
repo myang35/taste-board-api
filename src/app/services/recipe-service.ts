@@ -27,12 +27,22 @@ export const recipeService = {
       .populate<{ author: IUser }>("author")
       .lean();
   },
-  update: async (id: string, recipe: { name?: string; authorId?: string }) => {
+  update: async (
+    id: string,
+    recipe: {
+      authorId?: string;
+      name?: string;
+      description?: string;
+      imageUrl?: string;
+    }
+  ) => {
     return Recipe.findByIdAndUpdate(
       id,
       {
-        name: recipe.name,
         author: recipe.authorId,
+        name: recipe.name,
+        description: recipe.description,
+        imageUrl: recipe.imageUrl,
       },
       { new: true }
     )

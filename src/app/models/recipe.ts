@@ -7,6 +7,9 @@ export interface IRecipe {
   name: string;
   description: string;
   imageUrl: string;
+  prepMinutes: number;
+  calories: number;
+  tags: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -31,6 +34,16 @@ export const recipeSchema = new mongoose.Schema<IRecipe>(
     },
     imageUrl: {
       type: String,
+    },
+    prepMinutes: {
+      type: Number,
+    },
+    calories: {
+      type: Number,
+    },
+    tags: {
+      type: [String],
+      default: [],
     },
   },
   {

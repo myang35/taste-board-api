@@ -13,12 +13,18 @@ export const recipeService = {
     authorId: string;
     description?: string;
     imageUrl?: string;
+    prepMinutes?: number;
+    calories?: number;
+    tags?: string[];
   }) => {
     const recipeDoc = await Recipe.create({
       name: recipe.name,
       author: recipe.authorId,
       description: recipe.description,
       imageUrl: recipe.imageUrl,
+      prepMinutes: recipe.prepMinutes,
+      calories: recipe.calories,
+      tags: recipe.tags,
     });
     return recipeDoc;
   },
@@ -34,6 +40,9 @@ export const recipeService = {
       name?: string;
       description?: string;
       imageUrl?: string;
+      prepMinutes?: number;
+      calories?: number;
+      tags?: string[];
     }
   ) => {
     return Recipe.findByIdAndUpdate(
@@ -43,6 +52,9 @@ export const recipeService = {
         name: recipe.name,
         description: recipe.description,
         imageUrl: recipe.imageUrl,
+        prepMinutes: recipe.prepMinutes,
+        calories: recipe.calories,
+        tags: recipe.tags,
       },
       { new: true }
     )

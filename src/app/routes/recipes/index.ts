@@ -72,6 +72,9 @@ recipesRouter
         name: recipeDoc.name,
         description: recipeDoc.description,
         imageUrl: recipeDoc.imageUrl,
+        prepMinutes: recipeDoc.prepMinutes,
+        calories: recipeDoc.calories,
+        tags: recipeDoc.tags,
         createdAt: recipeDoc.createdAt.toISOString(),
         updatedAt: recipeDoc.updatedAt.toISOString(),
       });

@@ -8,6 +8,9 @@ export class RecipeDto {
   name: string;
   description: string;
   imageUrl: string;
+  prepMinutes: number;
+  calories: number;
+  tags: string[];
   createdAt: string;
   updatedAt: string;
 
@@ -17,6 +20,9 @@ export class RecipeDto {
     name: string;
     description: string;
     imageUrl: string;
+    prepMinutes: number;
+    calories: number;
+    tags: string[];
     createdAt: string;
     updatedAt: string;
   }) {
@@ -25,6 +31,9 @@ export class RecipeDto {
     this.name = params.name;
     this.description = params.description;
     this.imageUrl = params.imageUrl;
+    this.prepMinutes = params.prepMinutes;
+    this.calories = params.calories;
+    this.tags = params.tags;
     this.createdAt = params.createdAt;
     this.updatedAt = params.updatedAt;
   }
@@ -39,6 +48,9 @@ export class RecipeDto {
       name: recipeDoc.name,
       description: recipeDoc.description,
       imageUrl: recipeDoc.imageUrl,
+      prepMinutes: recipeDoc.prepMinutes,
+      calories: recipeDoc.calories,
+      tags: recipeDoc.tags,
       createdAt: recipeDoc.createdAt.toISOString(),
       updatedAt: recipeDoc.updatedAt.toISOString(),
     });

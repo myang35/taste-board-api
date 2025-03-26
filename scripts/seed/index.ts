@@ -12,28 +12,31 @@ import { users } from "./users";
 
 mongoose.connect(config.mongodbUri).then(async (connection) => {
   await Promise.all([
-    Ingredient.create(ingredients)
-      .then(() => {
-        console.log(`\x1b[32mCreated ${ingredients.length} ingredients\x1b[0m`);
-      })
-      .catch(() => {
-        console.log(`\x1b[33mNo ingredients created\x1b[0m`);
-      }),
-    User.create(users)
-      .then(() => {
-        console.log(`\x1b[32mCreated ${users.length} users\x1b[0m`);
-      })
-      .catch(() => {
-        console.log(`\x1b[33mNo users created\x1b[0m`);
-      }),
-    Recipe.create(recipes)
-      .then(() => {
-        console.log(`\x1b[32mCreated ${recipes.length} recipes\x1b[0m`);
-      })
-      .catch(() => {
-        console.log(`\x1b[33mNo recipes created\x1b[0m`);
-      }),
+    createDocs(Ingredient, "ingredient", ingredients),
+    createDocs(User, "user", users),
+    createDocs(Recipe, "recipe", recipes),
   ]);
 
   connection.disconnect();
 });
+
+async function createDocs<T>(
+  model: mongoose.Model<T>,
+  dataName: string,
+  docs: any
+) {
+  return model
+    .insertMany(docs, { ordered: false })
+    .then((result) => {
+      console.log(`\x1b[32mCreated ${result.length} ${dataName}s\x1b[0m`);
+    })
+    .catch((error) => {
+      if (error.insertedDocs) {
+        console.log(
+          `\x1b[32mCreated ${error.insertedDocs.length} ${dataName}s\x1b[0m`
+        );
+      } else {
+        console.log(`\x1b[33mFailed to create ${dataName}s\x1b[0m`);
+      }
+    });
+}

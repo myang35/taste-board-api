@@ -34,7 +34,19 @@ recipesRouter
   )
   .post(
     requestHandler(async (req, res) => {
-      const { name, authorId, description, imageUrl } = req.body;
+      const {
+        name,
+        authorId,
+        description,
+        imageUrl,
+        prepMinutes,
+        calories,
+        tags,
+        ingredients,
+        steps,
+        notes,
+        shared,
+      } = req.body;
 
       const invalidInputs: InvalidInputsErrorInput[] = [];
       if (!name) {
@@ -46,6 +58,24 @@ recipesRouter
       if (!authorId) {
         invalidInputs.push({
           name: "authorId",
+          message: "Required",
+        });
+      }
+      if (!ingredients) {
+        invalidInputs.push({
+          name: "ingredients",
+          message: "Required",
+        });
+      }
+      if (!steps) {
+        invalidInputs.push({
+          name: "steps",
+          message: "Required",
+        });
+      }
+      if (!shared) {
+        invalidInputs.push({
+          name: "shared",
           message: "Required",
         });
       }
@@ -65,6 +95,13 @@ recipesRouter
         authorId,
         description,
         imageUrl,
+        prepMinutes,
+        calories,
+        tags,
+        ingredients,
+        steps,
+        notes,
+        shared,
       });
       const recipeDto = new RecipeDto({
         id: recipeDoc._id,
@@ -75,6 +112,10 @@ recipesRouter
         prepMinutes: recipeDoc.prepMinutes,
         calories: recipeDoc.calories,
         tags: recipeDoc.tags,
+        ingredients: recipeDoc.ingredients,
+        steps: recipeDoc.steps,
+        notes: recipeDoc.notes,
+        shared: recipeDoc.shared,
         createdAt: recipeDoc.createdAt.toISOString(),
         updatedAt: recipeDoc.updatedAt.toISOString(),
       });

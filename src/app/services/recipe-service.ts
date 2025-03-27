@@ -11,15 +11,26 @@ export const recipeService = {
   create: async (recipe: {
     name: string;
     authorId: string;
+    ingredients: {
+      name: string;
+      amount: number;
+      unit: string;
+    }[];
+    steps: string[];
+    shared: boolean;
     description?: string;
     imageUrl?: string;
     prepMinutes?: number;
     calories?: number;
     tags?: string[];
+    notes?: string;
   }) => {
     const recipeDoc = await Recipe.create({
       name: recipe.name,
       author: recipe.authorId,
+      ingredients: recipe.ingredients,
+      steps: recipe.steps,
+      shared: recipe.shared,
       description: recipe.description,
       imageUrl: recipe.imageUrl,
       prepMinutes: recipe.prepMinutes,
@@ -43,6 +54,14 @@ export const recipeService = {
       prepMinutes?: number;
       calories?: number;
       tags?: string[];
+      ingredients?: {
+        name: string;
+        amount: number;
+        unit: string;
+      }[];
+      steps?: string[];
+      notes?: string;
+      shared?: boolean;
     }
   ) => {
     return Recipe.findByIdAndUpdate(
@@ -55,6 +74,10 @@ export const recipeService = {
         prepMinutes: recipe.prepMinutes,
         calories: recipe.calories,
         tags: recipe.tags,
+        ingredients: recipe.ingredients,
+        steps: recipe.steps,
+        notes: recipe.notes,
+        shared: recipe.shared,
       },
       { new: true }
     )

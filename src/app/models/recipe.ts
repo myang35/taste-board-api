@@ -10,6 +10,14 @@ export interface IRecipe {
   prepMinutes: number;
   calories: number;
   tags: string[];
+  ingredients: {
+    name: string;
+    amount: number;
+    unit: string;
+  }[];
+  steps: string[];
+  notes: string;
+  shared: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,6 +31,7 @@ export const recipeSchema = new mongoose.Schema<IRecipe>(
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
     name: {
       type: String,
@@ -44,6 +53,27 @@ export const recipeSchema = new mongoose.Schema<IRecipe>(
     tags: {
       type: [String],
       default: [],
+    },
+    ingredients: {
+      type: [
+        {
+          name: String,
+          amount: Number,
+          unit: String,
+        },
+      ],
+      required: true,
+    },
+    steps: {
+      type: [String],
+      required: true,
+    },
+    notes: {
+      type: String,
+    },
+    shared: {
+      type: Boolean,
+      required: true,
     },
   },
   {

@@ -32,6 +32,7 @@ export class RecipeDto {
     calories: number;
     tags: string[];
     ingredients: {
+      id: string;
       name: string;
       amount: number;
       unit: string;
@@ -71,7 +72,12 @@ export class RecipeDto {
       prepMinutes: recipeDoc.prepMinutes,
       calories: recipeDoc.calories,
       tags: recipeDoc.tags,
-      ingredients: recipeDoc.ingredients,
+      ingredients: recipeDoc.ingredients.map((ingredient) => ({
+        id: ingredient._id,
+        name: ingredient.name,
+        amount: ingredient.amount,
+        unit: ingredient.unit,
+      })),
       steps: recipeDoc.steps,
       notes: recipeDoc.notes,
       shared: recipeDoc.shared,

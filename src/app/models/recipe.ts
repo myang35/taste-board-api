@@ -11,6 +11,7 @@ export interface IRecipe {
   calories: number;
   tags: string[];
   ingredients: {
+    _id: string;
     name: string;
     amount: number;
     unit: string;

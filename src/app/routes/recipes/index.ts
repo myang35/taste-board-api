@@ -1,5 +1,4 @@
 import { RecipeDto } from "@src/app/dto/recipe-dto";
-import { UserDto } from "@src/app/dto/user-dto";
 import {
   InvalidInputsError,
   InvalidInputsErrorInput,
@@ -103,21 +102,9 @@ recipesRouter
         notes,
         shared,
       });
-      const recipeDto = new RecipeDto({
-        id: recipeDoc._id,
-        author: UserDto.fromDoc(authorDoc),
-        name: recipeDoc.name,
-        description: recipeDoc.description,
-        imageUrl: recipeDoc.imageUrl,
-        prepMinutes: recipeDoc.prepMinutes,
-        calories: recipeDoc.calories,
-        tags: recipeDoc.tags,
-        ingredients: recipeDoc.ingredients,
-        steps: recipeDoc.steps,
-        notes: recipeDoc.notes,
-        shared: recipeDoc.shared,
-        createdAt: recipeDoc.createdAt.toISOString(),
-        updatedAt: recipeDoc.updatedAt.toISOString(),
+      const recipeDto = RecipeDto.fromDoc({
+        ...recipeDoc,
+        author: authorDoc,
       });
       res.json(recipeDto);
     })

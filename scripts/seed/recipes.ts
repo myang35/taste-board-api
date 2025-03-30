@@ -12,13 +12,28 @@ export const recipes = [
     tags: ["vegetarian"],
     createdAt: "2025-03-05T04:41:00.082Z",
     updatedAt: "2025-03-19T06:30:15.942Z",
+    ingredients: [
+      { name: "Vanilla pudding mix", amount: 1, unit: "packet" },
+      { name: "Bananas", amount: 3, unit: "pieces" },
+      { name: "Vanilla wafers", amount: 200, unit: "grams" },
+      { name: "Milk", amount: 2, unit: "cups" },
+    ],
+    steps: [
+      "Prepare vanilla pudding according to package instructions.",
+      "Layer pudding, banana slices, and vanilla wafers in a dish.",
+      "Repeat layers until ingredients are used up.",
+      "Chill in the refrigerator for 2 hours before serving.",
+    ],
+    notes:
+      "For extra flavor, top with whipped cream or a sprinkle of cinnamon.",
+    shared: true,
   },
   {
     _id: "67c7e4490ac0305442cd21f1",
     author: "67da699121ed26778eb78053",
     name: "Chorizo and Mozzarella Gnocchi Bake",
     description:
-      "A comforting and flavorful dish. It features soft, pillowy gnocchi cooked in a rich and tangy tomato sauce infused with the smoky and slightly spicy flavor of chorizo. The dish is topped with gooey, melted mozzarella cheese, which forms a golden crust when baked. It's often garnished with fresh herbs like basil or parsley for added color and aroma. This dish is a perfect combination of hearty, cheesy, and savory elements, making it an _ideal option for a satisfying meal.",
+      "A comforting and flavorful dish. It features soft, pillowy gnocchi cooked in a rich and tangy tomato sauce infused with the smoky and slightly spicy flavor of chorizo. The dish is topped with gooey, melted mozzarella cheese, which forms a golden crust when baked.",
     imageUrl:
       "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?resize=768,574",
     prepMinutes: 30,
@@ -26,13 +41,29 @@ export const recipes = [
     tags: [],
     createdAt: "2025-03-05T05:42:33.280Z",
     updatedAt: "2025-03-19T06:02:16.727Z",
+    ingredients: [
+      { name: "Gnocchi", amount: 500, unit: "grams" },
+      { name: "Chorizo", amount: 150, unit: "grams" },
+      { name: "Mozzarella cheese", amount: 200, unit: "grams" },
+      { name: "Tomato sauce", amount: 2, unit: "cups" },
+    ],
+    steps: [
+      "Preheat oven to 375°F (190°C).",
+      "Cook gnocchi according to package instructions.",
+      "Sauté chorizo in a pan until browned.",
+      "Combine gnocchi, chorizo, and tomato sauce in a baking dish.",
+      "Top with mozzarella cheese and bake for 15 minutes.",
+      "Serve hot, garnished with fresh basil.",
+    ],
+    notes: "For a vegetarian option, replace chorizo with sautéed mushrooms.",
+    shared: true,
   },
   {
     _id: "67d8e207395b045498447eef",
     author: "67da698621ed26778eb7804e",
     name: "Mediterranean Mezze Platter",
     description:
-      "This platter features a vibrant array of fresh and flavorful components often associated with Mediterranean cuisine. It offers a delightful mix of textures and flavors, _ideal for sharing and enjoying as an appetizer or light meal.",
+      "This platter features a vibrant array of fresh and flavorful components often associated with Mediterranean cuisine. It offers a delightful mix of textures and flavors, ideal for sharing and enjoying as an appetizer or light meal.",
     imageUrl:
       "https://www.chasinglenscapes.com/wp-content/media/2020/06/food-photography-on-the-go-tips.jpg",
     prepMinutes: 30,
@@ -40,6 +71,21 @@ export const recipes = [
     tags: [],
     createdAt: "2025-03-18T03:01:27.193Z",
     updatedAt: "2025-03-19T06:02:43.858Z",
+    ingredients: [
+      { name: "Hummus", amount: 1, unit: "cup" },
+      { name: "Pita bread", amount: 2, unit: "pieces" },
+      { name: "Olives", amount: 100, unit: "grams" },
+      { name: "Feta cheese", amount: 150, unit: "grams" },
+      { name: "Cucumber", amount: 1, unit: "piece" },
+    ],
+    steps: [
+      "Arrange hummus in a bowl in the center of a platter.",
+      "Slice pita bread and cucumber into bite-sized pieces.",
+      "Arrange pita bread, olives, feta cheese, and cucumber around the hummus.",
+      "Serve with extra olive oil drizzled on top of the hummus.",
+    ],
+    notes: "Add roasted red peppers or dolmas for extra variety.",
+    shared: true,
   },
   {
     _id: "67d8e2b5395b045498447ef4",
@@ -54,6 +100,21 @@ export const recipes = [
     tags: [],
     createdAt: "2025-03-18T03:04:21.566Z",
     updatedAt: "2025-03-19T06:16:53.057Z",
+    ingredients: [
+      { name: "Penne pasta", amount: 400, unit: "grams" },
+      { name: "Ground beef", amount: 300, unit: "grams" },
+      { name: "Vodka sauce", amount: 2, unit: "cups" },
+      { name: "Parmesan cheese", amount: 50, unit: "grams" },
+    ],
+    steps: [
+      "Cook penne pasta according to package instructions.",
+      "Form ground beef into small meatballs and cook in a skillet.",
+      "Heat vodka sauce in a saucepan.",
+      "Combine cooked pasta, meatballs, and sauce in a large pot.",
+      "Serve topped with Parmesan cheese and fresh parsley.",
+    ],
+    notes: "Use turkey or plant-based meatballs for a variation.",
+    shared: true,
   },
   {
     _id: "67d8e33f395b045498447ef9",
@@ -68,5 +129,22 @@ export const recipes = [
     tags: [],
     createdAt: "2025-03-18T03:06:39.730Z",
     updatedAt: "2025-03-19T06:17:22.875Z",
+    ingredients: [
+      { name: "Egg whites", amount: 12, unit: "pieces" },
+      { name: "Gluten-free flour", amount: 1, unit: "cup" },
+      { name: "Sugar", amount: 1.5, unit: "cups" },
+      { name: "Vanilla extract", amount: 1, unit: "teaspoon" },
+    ],
+    steps: [
+      "Preheat oven to 350°F (175°C).",
+      "Whisk egg whites until soft peaks form.",
+      "Gradually add sugar and whisk until stiff peaks form.",
+      "Fold in gluten-free flour and vanilla extract gently.",
+      "Pour batter into an ungreased angel food cake pan.",
+      "Bake for 35-40 minutes until golden brown.",
+      "Invert pan and cool before removing cake.",
+    ],
+    notes: "Serve with fresh berries and whipped cream for extra flavor.",
+    shared: true,
   },
 ];

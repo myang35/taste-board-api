@@ -174,4 +174,13 @@ authRouter
       const userDto = UserDto.fromDoc(userDoc);
       res.json({ user: userDto, token: accessToken });
     })
+  )
+  .post(
+    "/logout",
+    requestHandler(async (req, res) => {
+      const { refreshToken } = req.cookies;
+      await userService.deleteRefreshToken(refreshToken);
+      res.clearCookie("refreshToken");
+      res.status(204).send();
+    })
   );

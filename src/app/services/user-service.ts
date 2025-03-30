@@ -13,19 +13,22 @@ export const userService = {
   getByEmail: async (email: string) => {
     return User.findOne({ email }).lean();
   },
-  getByRefreshToken: async (refreshToken: string) => {
-    const refreshTokenDoc = await RefreshToken.findOne({ value: refreshToken });
-    if (!refreshTokenDoc) {
-      return null;
-    }
-    return User.findById(refreshTokenDoc.user);
-  },
   create: async (user: { email: string; password: string }) => {
     const hashPassword = await bcrypt.hash(user.password, 10);
     return User.create({
       email: user.email,
       password: hashPassword,
     });
+  },
+  verifyPassword: async (userDoc: IUser, password: string) => {
+    return bcrypt.compare(password, userDoc.password);
+  },
+  getByRefreshToken: async (refreshToken: string) => {
+    const refreshTokenDoc = await RefreshToken.findOne({ value: refreshToken });
+    if (!refreshTokenDoc) {
+      return null;
+    }
+    return User.findById(refreshTokenDoc.user);
   },
   createRefreshToken: async (userId: string) => {
     return RefreshToken.create({
@@ -41,7 +44,7 @@ export const userService = {
     });
     return token;
   },
-  verifyPassword: async (userDoc: IUser, password: string) => {
-    return bcrypt.compare(password, userDoc.password);
+  deleteRefreshToken: async (refreshToken: string) => {
+    return RefreshToken.deleteOne({ value: refreshToken });
   },
 };

@@ -159,4 +159,7 @@ export const recipeService = {
       .populate<{ author: IUser }>("author")
       .lean();
   },
+  count: async () => {
+    return Recipe.countDocuments();
+  },
 };

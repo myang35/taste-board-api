@@ -11,6 +11,14 @@ import express from "express";
 
 export const recipesRouter = express.Router();
 
+recipesRouter.get(
+  "/count",
+  requestHandler(async (req, res) => {
+    const count = await recipeService.count();
+    res.json({ count });
+  })
+);
+
 recipesRouter
   .route("/:recipeId?")
   .get(

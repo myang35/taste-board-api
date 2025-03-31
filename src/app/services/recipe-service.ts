@@ -1,9 +1,58 @@
-import { Recipe } from "@src/app/models/recipe";
-import { IUser } from "@src/app/models/user";
+import { IRecipePopulated, Recipe } from "@src/app/models/recipe";
+import { IUser, User } from "@src/app/models/user";
+import { dateUtils } from "@src/utils/date-utils";
 
 export const recipeService = {
-  getAll: async () => {
-    return Recipe.find().populate<{ author: IUser }>("author").lean();
+  getAll: async (options?: { sort?: string }) => {
+    const query = (() => {
+      const oneMonthAgo = dateUtils.createDateAfter(-1000 * 60 * 60 * 24 * 30);
+      return Recipe.aggregate<
+        IRecipePopulated & { recentViews: number; totalViews: number }
+      >([
+        {
+          $addFields: {
+            recentViews: {
+              $size: {
+                $filter: {
+                  input: "$views",
+                  as: "view",
+                  cond: { $gte: ["$$view.date", oneMonthAgo] },
+                },
+              },
+            },
+            totalViews: {
+              $size: "$views",
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: User.collection.name,
+            localField: "author",
+            foreignField: "_id",
+            as: "author",
+          },
+        },
+        {
+          $unwind: "$author",
+        },
+      ]);
+    })();
+
+    switch (options?.sort) {
+      case "most_viewed":
+        query.sort("-totalViews");
+        break;
+      case "newest":
+        query.sort("-createdAt");
+        break;
+      case "trending":
+        query.sort("-recentViews -totalViews");
+      default:
+        break;
+    }
+
+    return query;
   },
   get: async (id: string) => {
     return Recipe.findById(id).populate<{ author: IUser }>("author").lean();
@@ -24,6 +73,10 @@ export const recipeService = {
     calories?: number;
     tags?: string[];
     notes?: string;
+    views?: {
+      viewer: string;
+      date: number;
+    }[];
   }) => {
     const recipeDoc = await Recipe.create({
       name: recipe.name,
@@ -36,6 +89,7 @@ export const recipeService = {
       prepMinutes: recipe.prepMinutes,
       calories: recipe.calories,
       tags: recipe.tags,
+      views: recipe.views,
     });
     return recipeDoc;
   },
@@ -60,8 +114,13 @@ export const recipeService = {
         unit: string;
       }[];
       steps?: string[];
+      viewCount?: number;
       notes?: string;
       shared?: boolean;
+      views?: {
+        viewer: string;
+        date: number;
+      };
     }
   ) => {
     return Recipe.findByIdAndUpdate(
@@ -76,8 +135,10 @@ export const recipeService = {
         tags: recipe.tags,
         ingredients: recipe.ingredients,
         steps: recipe.steps,
+        viewCount: recipe.viewCount,
         notes: recipe.notes,
         shared: recipe.shared,
+        views: recipe.views,
       },
       { new: true }
     )

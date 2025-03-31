@@ -16,7 +16,25 @@ recipesRouter
   .get(
     requestHandler(async (req, res) => {
       if (!req.params.recipeId) {
-        const recipeDocs = await recipeService.getAll();
+        const query = {
+          sort: (() => {
+            let value;
+            if (req.query.sort instanceof Array) {
+              value = req.query.sort[0];
+            } else {
+              value = req.query.sort;
+            }
+            if (
+              typeof value !== "string" ||
+              !["most_viewed", "newest", "trending"].includes(value)
+            ) {
+              return undefined;
+            }
+            return value;
+          })(),
+        };
+
+        const recipeDocs = await recipeService.getAll(query);
         const recipeDtos = recipeDocs.map(RecipeDto.fromDoc);
         res.json(recipeDtos);
         return;

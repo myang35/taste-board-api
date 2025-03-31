@@ -19,6 +19,7 @@ export class RecipeDto {
   steps: string[];
   notes: string;
   shared: boolean;
+  viewCount: number;
   createdAt: string;
   updatedAt: string;
 
@@ -40,6 +41,7 @@ export class RecipeDto {
     steps: string[];
     notes: string;
     shared: boolean;
+    viewCount: number;
     createdAt: string;
     updatedAt: string;
   }) {
@@ -55,6 +57,7 @@ export class RecipeDto {
     this.steps = params.steps;
     this.notes = params.notes;
     this.shared = params.shared;
+    this.viewCount = params.viewCount;
     this.createdAt = params.createdAt;
     this.updatedAt = params.updatedAt;
   }
@@ -81,6 +84,7 @@ export class RecipeDto {
       steps: recipeDoc.steps,
       notes: recipeDoc.notes,
       shared: recipeDoc.shared,
+      viewCount: recipeDoc.views.length,
       createdAt: recipeDoc.createdAt.toISOString(),
       updatedAt: recipeDoc.updatedAt.toISOString(),
     });

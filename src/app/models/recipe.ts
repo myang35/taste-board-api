@@ -19,6 +19,11 @@ export interface IRecipe {
   steps: string[];
   notes: string;
   shared: boolean;
+  views: {
+    _id: string;
+    viewer: mongoose.Schema.Types.ObjectId;
+    date: Date;
+  }[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -75,6 +80,21 @@ export const recipeSchema = new mongoose.Schema<IRecipe>(
     shared: {
       type: Boolean,
       required: true,
+    },
+    views: {
+      type: [
+        {
+          viewer: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+          },
+          date: {
+            type: Date,
+            default: Date.now,
+          },
+        },
+      ],
+      default: [],
     },
   },
   {

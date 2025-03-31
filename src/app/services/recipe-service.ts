@@ -3,41 +3,55 @@ import { IUser, User } from "@src/app/models/user";
 import { dateUtils } from "@src/utils/date-utils";
 
 export const recipeService = {
-  getAll: async (options?: { sort?: string }) => {
-    const query = (() => {
-      const oneMonthAgo = dateUtils.createDateAfter(-1000 * 60 * 60 * 24 * 30);
-      return Recipe.aggregate<
-        IRecipePopulated & { recentViews: number; totalViews: number }
-      >([
-        {
-          $addFields: {
-            recentViews: {
-              $size: {
-                $filter: {
-                  input: "$views",
-                  as: "view",
-                  cond: { $gte: ["$$view.date", oneMonthAgo] },
-                },
+  getAll: async (options?: { search?: string; sort?: string }) => {
+    const oneMonthAgo = dateUtils.createDateAfter(-1000 * 60 * 60 * 24 * 30);
+    const query = Recipe.aggregate<IRecipePopulated>([
+      {
+        $match: {
+          $or: [
+            {
+              name: {
+                $regex: options?.search ?? "",
+                $options: "i",
               },
             },
-            totalViews: {
-              $size: "$views",
+            {
+              tags: {
+                $regex: options?.search ?? "",
+                $options: "i",
+              },
+            },
+          ],
+        },
+      },
+      {
+        $addFields: {
+          recentViews: {
+            $size: {
+              $filter: {
+                input: "$views",
+                as: "view",
+                cond: { $gte: ["$$view.date", oneMonthAgo] },
+              },
             },
           },
-        },
-        {
-          $lookup: {
-            from: User.collection.name,
-            localField: "author",
-            foreignField: "_id",
-            as: "author",
+          totalViews: {
+            $size: "$views",
           },
         },
-        {
-          $unwind: "$author",
+      },
+      {
+        $lookup: {
+          from: User.collection.name,
+          localField: "author",
+          foreignField: "_id",
+          as: "author",
         },
-      ]);
-    })();
+      },
+      {
+        $unwind: "$author",
+      },
+    ]);
 
     switch (options?.sort) {
       case "most_viewed":

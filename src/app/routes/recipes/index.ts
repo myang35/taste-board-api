@@ -32,6 +32,18 @@ recipesRouter
             }
             return value;
           })(),
+          search: (() => {
+            let value;
+            if (req.query.search instanceof Array) {
+              value = req.query.search[0];
+            } else {
+              value = req.query.search;
+            }
+            if (typeof value !== "string") {
+              return undefined;
+            }
+            return value;
+          })(),
         };
 
         const recipeDocs = await recipeService.getAll(query);

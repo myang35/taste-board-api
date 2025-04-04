@@ -7,6 +7,7 @@ import { ResourceNotFoundError } from "@src/app/errors/resource-not-found-error"
 import { recipeService } from "@src/app/services/recipe-service";
 import { userService } from "@src/app/services/user-service";
 import { requestHandler } from "@src/app/wrappers/request-handler";
+import { queryToString } from "@src/utils/app-utils";
 import express from "express";
 
 export const recipesRouter = express.Router();
@@ -26,31 +27,18 @@ recipesRouter
       if (!req.params.recipeId) {
         const query = {
           sort: (() => {
-            let value;
-            if (req.query.sort instanceof Array) {
-              value = req.query.sort[0];
-            } else {
-              value = req.query.sort;
-            }
-            if (
-              typeof value !== "string" ||
-              !["most_viewed", "newest", "trending"].includes(value)
-            ) {
+            let value = queryToString(req.query.sort);
+            if (!value) return undefined;
+            if (!["most_viewed", "newest", "trending"].includes(value)) {
               return undefined;
             }
             return value;
           })(),
-          search: (() => {
-            let value;
-            if (req.query.search instanceof Array) {
-              value = req.query.search[0];
-            } else {
-              value = req.query.search;
-            }
-            if (typeof value !== "string") {
-              return undefined;
-            }
-            return value;
+          search: queryToString(req.query.search),
+          limit: (() => {
+            let value = queryToString(req.query.limit);
+            if (!value) return undefined;
+            return parseInt(value);
           })(),
         };
 

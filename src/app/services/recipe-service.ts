@@ -1,11 +1,16 @@
 import { IRecipePopulated, Recipe } from "@src/app/models/recipe";
 import { IUser, User } from "@src/app/models/user";
 import { dateUtils } from "@src/utils/date-utils";
+import { PipelineStage } from "mongoose";
 
 export const recipeService = {
-  getAll: async (options?: { search?: string; sort?: string }) => {
+  getAll: async (options?: {
+    search?: string;
+    sort?: string;
+    limit?: number;
+  }) => {
     const oneMonthAgo = dateUtils.createDateAfter(-1000 * 60 * 60 * 24 * 30);
-    const query = Recipe.aggregate<IRecipePopulated>([
+    const pipelineStages: PipelineStage[] = [
       {
         $match: {
           $or: [
@@ -24,34 +29,47 @@ export const recipeService = {
           ],
         },
       },
-      {
-        $addFields: {
-          recentViews: {
-            $size: {
-              $filter: {
-                input: "$views",
-                as: "view",
-                cond: { $gte: ["$$view.date", oneMonthAgo] },
+    ];
+
+    if (options?.sort) {
+      pipelineStages.push(
+        {
+          $addFields: {
+            recentViews: {
+              $size: {
+                $filter: {
+                  input: "$views",
+                  as: "view",
+                  cond: { $gte: ["$$view.date", oneMonthAgo] },
+                },
               },
             },
-          },
-          totalViews: {
-            $size: "$views",
+            totalViews: {
+              $size: "$views",
+            },
           },
         },
-      },
-      {
-        $lookup: {
-          from: User.collection.name,
-          localField: "author",
-          foreignField: "_id",
-          as: "author",
+        {
+          $lookup: {
+            from: User.collection.name,
+            localField: "author",
+            foreignField: "_id",
+            as: "author",
+          },
         },
-      },
-      {
-        $unwind: "$author",
-      },
-    ]);
+        {
+          $unwind: "$author",
+        }
+      );
+    }
+
+    if (options?.limit && options?.limit > 0) {
+      pipelineStages.push({
+        $limit: options.limit,
+      });
+    }
+
+    const query = Recipe.aggregate<IRecipePopulated>(pipelineStages);
 
     switch (options?.sort) {
       case "most_viewed":

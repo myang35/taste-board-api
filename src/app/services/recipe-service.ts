@@ -8,6 +8,7 @@ export const recipeService = {
     search?: string;
     sort?: string;
     limit?: number;
+    skip?: number;
   }) => {
     const oneMonthAgo = dateUtils.createDateAfter(-1000 * 60 * 60 * 24 * 30);
     const pipelineStages: PipelineStage[] = [
@@ -31,7 +32,10 @@ export const recipeService = {
       },
     ];
 
-    if (options?.sort) {
+    if (
+      options?.sort &&
+      ["most_viewed", "newest", "trending"].includes(options.sort)
+    ) {
       pipelineStages.push(
         {
           $addFields: {
@@ -59,32 +63,50 @@ export const recipeService = {
         },
         {
           $unwind: "$author",
+        },
+        {
+          $sort: (() => {
+            let result: PipelineStage.Sort["$sort"];
+            switch (options?.sort) {
+              case "most_viewed":
+                result = {
+                  totalViews: -1,
+                };
+                break;
+              case "newest":
+                result = {
+                  createdAt: -1,
+                };
+                break;
+              case "trending":
+                result = {
+                  recentViews: -1,
+                  totalsViews: -1,
+                };
+                break;
+              default:
+                result = {};
+                break;
+            }
+            return result;
+          })(),
         }
       );
     }
 
-    if (options?.limit && options?.limit > 0) {
+    if (options?.skip && options.skip > 0) {
+      pipelineStages.push({
+        $skip: options.skip,
+      });
+    }
+
+    if (options?.limit && options.limit > 0) {
       pipelineStages.push({
         $limit: options.limit,
       });
     }
 
-    const query = Recipe.aggregate<IRecipePopulated>(pipelineStages);
-
-    switch (options?.sort) {
-      case "most_viewed":
-        query.sort("-totalViews");
-        break;
-      case "newest":
-        query.sort("-createdAt");
-        break;
-      case "trending":
-        query.sort("-recentViews -totalViews");
-      default:
-        break;
-    }
-
-    return query;
+    return Recipe.aggregate<IRecipePopulated>(pipelineStages);
   },
   get: async (id: string) => {
     return Recipe.findById(id).populate<{ author: IUser }>("author").lean();

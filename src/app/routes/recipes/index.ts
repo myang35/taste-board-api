@@ -16,7 +16,7 @@ recipesRouter.get(
   "/count",
   requestHandler(async (req, res) => {
     const count = await recipeService.count();
-    res.json({ count });
+    res.json({ result: count });
   })
 );
 

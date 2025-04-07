@@ -199,7 +199,22 @@ export const recipeService = {
       .populate<{ author: IUser }>("author")
       .lean();
   },
-  count: async () => {
-    return Recipe.countDocuments();
+  count: async (options?: { search?: string }) => {
+    return Recipe.countDocuments({
+      $or: [
+        {
+          name: {
+            $regex: options?.search ?? "",
+            $options: "i",
+          },
+        },
+        {
+          tags: {
+            $regex: options?.search ?? "",
+            $options: "i",
+          },
+        },
+      ],
+    });
   },
 };

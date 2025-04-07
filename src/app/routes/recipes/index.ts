@@ -15,7 +15,11 @@ export const recipesRouter = express.Router();
 recipesRouter.get(
   "/count",
   requestHandler(async (req, res) => {
-    const count = await recipeService.count();
+    const query = {
+      search: queryUtils.toString(req.query.search),
+    };
+
+    const count = await recipeService.count(query);
     res.json({ result: count });
   })
 );

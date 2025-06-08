@@ -1,7 +1,7 @@
 import { IRecipePopulated, Recipe } from "@src/app/models/recipe";
 import { IUser, User } from "@src/app/models/user";
 import { dateUtils } from "@src/utils/date-utils";
-import { PipelineStage } from "mongoose";
+import { isValidObjectId, PipelineStage } from "mongoose";
 
 export const recipeService = {
   getAll: async (options?: {
@@ -109,6 +109,7 @@ export const recipeService = {
     return Recipe.aggregate<IRecipePopulated>(pipelineStages);
   },
   get: async (id: string) => {
+    if (!isValidObjectId(id)) return null;
     return Recipe.findById(id).populate<{ author: IUser }>("author").lean();
   },
   create: async (recipe: {

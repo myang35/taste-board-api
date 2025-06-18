@@ -68,6 +68,8 @@ export class RecipeDto {
       author: new UserDto({
         id: recipeDoc.author._id,
         email: recipeDoc.author.email,
+        name: recipeDoc.author.name,
+        imgUrl: recipeDoc.author.imgUrl,
       }),
       name: recipeDoc.name,
       description: recipeDoc.description,

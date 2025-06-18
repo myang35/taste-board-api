@@ -7,6 +7,9 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export const userService = {
+  getAll: async () => {
+    return User.find().lean();
+  },
   getById: async (id: string) => {
     return User.findById(id).lean();
   },
@@ -19,6 +22,18 @@ export const userService = {
       email: user.email,
       password: hashPassword,
     });
+  },
+  updateById: async (
+    id: string,
+    updatedUser: {
+      name?: string;
+      imgUrl?: string;
+    }
+  ) => {
+    return User.findByIdAndUpdate(id, updatedUser, { new: true }).lean();
+  },
+  deleteById: async (id: string) => {
+    return User.findByIdAndDelete(id);
   },
   verifyPassword: async (userDoc: IUser, password: string) => {
     return bcrypt.compare(password, userDoc.password);

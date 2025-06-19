@@ -14,7 +14,6 @@ usersRouter
     requestHandler(async (req, res) => {
       if (!req.params.userId) {
         const userDocs = await userService.getAll();
-        console.log("userDocs[0]:", userDocs[0]);
         const userDtos = userDocs.map(UserDto.fromDoc);
         res.json(userDtos);
         return;

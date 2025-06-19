@@ -1,7 +1,6 @@
-import { IRecipePopulated, Recipe } from "@src/app/models/recipe";
-import { IUser, User } from "@src/app/models/user";
+import { RecipeModel } from "@src/app/models/recipe";
 import { dateUtils } from "@src/utils/date-utils";
-import { isValidObjectId, PipelineStage } from "mongoose";
+import { isValidObjectId, PipelineStage, Types } from "mongoose";
 
 export const recipeService = {
   getAll: async (options?: {
@@ -54,17 +53,6 @@ export const recipeService = {
           },
         },
         {
-          $lookup: {
-            from: User.collection.name,
-            localField: "author",
-            foreignField: "_id",
-            as: "author",
-          },
-        },
-        {
-          $unwind: "$author",
-        },
-        {
           $sort: (() => {
             let result: PipelineStage.Sort["$sort"];
             switch (options?.sort) {
@@ -106,11 +94,13 @@ export const recipeService = {
       });
     }
 
-    return Recipe.aggregate<IRecipePopulated>(pipelineStages);
+    const recipeDocs = await RecipeModel.aggregate(pipelineStages);
+
+    return RecipeModel.populate(recipeDocs, { path: "author" });
   },
-  get: async (id: string) => {
+  getById: async (id: Types.ObjectId | string) => {
     if (!isValidObjectId(id)) return null;
-    return Recipe.findById(id).populate<{ author: IUser }>("author").lean();
+    return RecipeModel.findById(id).populate("author").lean();
   },
   create: async (recipe: {
     name: string;
@@ -133,7 +123,7 @@ export const recipeService = {
       date: number;
     }[];
   }) => {
-    const recipeDoc = await Recipe.create({
+    const recipeDoc = await RecipeModel.create({
       name: recipe.name,
       author: recipe.authorId,
       ingredients: recipe.ingredients,
@@ -146,15 +136,14 @@ export const recipeService = {
       tags: recipe.tags,
       views: recipe.views,
     });
-    return recipeDoc;
+    const populatedRecipeDoc = await recipeDoc.populate("author");
+    return populatedRecipeDoc;
   },
-  delete: async (id: string) => {
-    return Recipe.findByIdAndDelete(id)
-      .populate<{ author: IUser }>("author")
-      .lean();
+  deleteById: async (id: Types.ObjectId | string) => {
+    return RecipeModel.findByIdAndDelete(id).populate("author").lean();
   },
-  update: async (
-    id: string,
+  updateById: async (
+    id: Types.ObjectId | string,
     recipe: {
       authorId?: string;
       name?: string;
@@ -178,7 +167,7 @@ export const recipeService = {
       };
     }
   ) => {
-    return Recipe.findByIdAndUpdate(
+    return RecipeModel.findByIdAndUpdate(
       id,
       {
         author: recipe.authorId,
@@ -197,11 +186,11 @@ export const recipeService = {
       },
       { new: true }
     )
-      .populate<{ author: IUser }>("author")
+      .populate("author")
       .lean();
   },
   count: async (options?: { search?: string }) => {
-    return Recipe.countDocuments({
+    return RecipeModel.countDocuments({
       $or: [
         {
           name: {

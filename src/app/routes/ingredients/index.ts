@@ -4,6 +4,7 @@ import { ResourceNotFoundError } from "@src/app/errors/resource-not-found-error"
 import { ingredientService } from "@src/app/services/ingredient-service";
 import { requestHandler } from "@src/app/wrappers/request-handler";
 import express from "express";
+import { isValidObjectId } from "mongoose";
 
 export const ingredientsRouter = express.Router();
 
@@ -11,16 +12,16 @@ ingredientsRouter
   .route("/:ingredientId?")
   .get(
     requestHandler(async (req, res) => {
-      const query = {
-        distinct: (() => {
-          if (req.query.distinct instanceof Array) {
-            return req.query.distinct[0] as string | undefined;
-          }
-          return req.query.distinct as string | undefined;
-        })(),
-      };
-
       if (!req.params.ingredientId) {
+        const query = {
+          distinct: (() => {
+            if (req.query.distinct instanceof Array) {
+              return req.query.distinct[0] as string | undefined;
+            }
+            return req.query.distinct as string | undefined;
+          })(),
+        };
+
         const ingredientDocs = await ingredientService.getAll(query);
 
         if (query.distinct) {
@@ -33,11 +34,27 @@ ingredientsRouter
         return;
       }
 
-      const ingredientDoc = await ingredientService.get(
+      if (!isValidObjectId(req.params.ingredientId)) {
+        res.status(400).json(
+          new InvalidInputsError({
+            inputs: [
+              {
+                name: "ingredientId",
+                message: "Invalid ObjectId",
+              },
+            ],
+          })
+        );
+        return;
+      }
+
+      const ingredientDoc = await ingredientService.getById(
         req.params.ingredientId
       );
       if (!ingredientDoc) {
-        res.json(new ResourceNotFoundError({ resource: "ingredient" }));
+        res
+          .status(404)
+          .json(new ResourceNotFoundError({ resource: "ingredient" }));
         return;
       }
 
@@ -56,7 +73,7 @@ ingredientsRouter
   .patch(
     requestHandler(async (req, res) => {
       if (!req.params.ingredientId) {
-        res.json(
+        res.status(400).json(
           new InvalidInputsError({
             inputs: [
               {
@@ -69,9 +86,23 @@ ingredientsRouter
         return;
       }
 
+      if (!isValidObjectId(req.params.ingredientId)) {
+        res.status(400).json(
+          new InvalidInputsError({
+            inputs: [
+              {
+                name: "ingredientId",
+                message: "Invalid ObjectId",
+              },
+            ],
+          })
+        );
+        return;
+      }
+
       const { name, category, description } = req.body;
 
-      const ingredientDoc = await ingredientService.update(
+      const ingredientDoc = await ingredientService.updateById(
         req.params.ingredientId,
         {
           name,
@@ -81,7 +112,9 @@ ingredientsRouter
       );
 
       if (!ingredientDoc) {
-        res.json(new ResourceNotFoundError({ resource: "ingredient" }));
+        res
+          .status(404)
+          .json(new ResourceNotFoundError({ resource: "ingredient" }));
         return;
       }
 
@@ -92,7 +125,7 @@ ingredientsRouter
   .delete(
     requestHandler(async (req, res) => {
       if (!req.params.ingredientId) {
-        res.json(
+        res.status(400).json(
           new InvalidInputsError({
             inputs: [
               {
@@ -105,7 +138,21 @@ ingredientsRouter
         return;
       }
 
-      const ingredientDoc = await ingredientService.delete(
+      if (!isValidObjectId(req.params.ingredientId)) {
+        res.status(400).json(
+          new InvalidInputsError({
+            inputs: [
+              {
+                name: "ingredientId",
+                message: "Invalid ObjectId",
+              },
+            ],
+          })
+        );
+        return;
+      }
+
+      const ingredientDoc = await ingredientService.deleteById(
         req.params.ingredientId
       );
 

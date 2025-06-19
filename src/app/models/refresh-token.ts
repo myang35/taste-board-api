@@ -1,31 +1,26 @@
-import mongoose from "mongoose";
+import {
+  getModelForClass,
+  modelOptions,
+  prop,
+  Ref,
+} from "@typegoose/typegoose";
+import { Base, TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
+import { Types } from "mongoose";
+import { User } from "./user";
 
-export interface IRefreshToken {
-  _id: string;
-  value: string;
-  user: mongoose.Schema.Types.ObjectId;
-  expireAt: Date;
+@modelOptions({ schemaOptions: { timestamps: true } })
+export class RefreshToken extends TimeStamps implements Base {
+  public _id!: Types.ObjectId;
+  public id!: string;
+
+  @prop({ required: true })
+  public value!: string;
+
+  @prop({ ref: () => User, required: true })
+  public user!: Ref<User>;
+
+  @prop({ expires: 0 })
+  public expireAt?: Date;
 }
 
-export const refreshTokenSchema = new mongoose.Schema<IRefreshToken>({
-  value: {
-    type: String,
-    index: true,
-    unique: true,
-    required: true,
-  },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  expireAt: {
-    type: Date,
-    expires: 0,
-  },
-});
-
-export const RefreshToken = mongoose.model<IRefreshToken>(
-  "RefreshToken",
-  refreshTokenSchema
-);
+export const RefreshTokenModel = getModelForClass(RefreshToken);

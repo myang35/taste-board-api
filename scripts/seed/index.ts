@@ -1,9 +1,9 @@
 import "dotenv/config";
 import "module-alias/register";
 
-import { Ingredient } from "@src/app/models/ingredient";
-import { Recipe } from "@src/app/models/recipe";
-import { User } from "@src/app/models/user";
+import { IngredientModel } from "@src/app/models/ingredient";
+import { RecipeModel } from "@src/app/models/recipe";
+import { UserModel } from "@src/app/models/user";
 import { config } from "@src/config";
 import mongoose from "mongoose";
 import { ingredients } from "./ingredients";
@@ -12,9 +12,9 @@ import { users } from "./users";
 
 mongoose.connect(config.mongodbUri).then(async (connection) => {
   await Promise.all([
-    createDocs(Ingredient, "ingredient", ingredients),
-    createDocs(User, "user", users),
-    createDocs(Recipe, "recipe", recipes),
+    createDocs(IngredientModel, "ingredient", ingredients),
+    createDocs(UserModel, "user", users),
+    createDocs(RecipeModel, "recipe", recipes),
   ]);
 
   connection.disconnect();

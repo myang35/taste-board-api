@@ -1,25 +1,23 @@
-import mongoose from "mongoose";
+import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
+import { Base, TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
+import { Types } from "mongoose";
 
-export interface IUser {
-  _id: string;
-  email: string;
-  password: string;
-  name: string;
-  imgUrl: string;
+@modelOptions({ schemaOptions: { timestamps: true } })
+export class User extends TimeStamps implements Base {
+  public _id!: Types.ObjectId;
+  public id!: string;
+
+  @prop({ required: true })
+  public email!: string;
+
+  @prop({ required: true })
+  public password!: string;
+
+  @prop()
+  public name?: string;
+
+  @prop()
+  public imageUrl?: string;
 }
 
-export const userSchema = new mongoose.Schema<IUser>({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  name: String,
-  imgUrl: String,
-});
-
-export const User = mongoose.model<IUser>("User", userSchema);
+export const UserModel = getModelForClass(User);

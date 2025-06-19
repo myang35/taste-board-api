@@ -1,4 +1,4 @@
-import { IIngredient } from "@src/app/models/ingredient";
+import { Ingredient } from "../models/ingredient";
 
 export class IngredientDto {
   id: string;
@@ -18,9 +18,9 @@ export class IngredientDto {
     this.description = params.description ?? "";
   }
 
-  static fromDoc(ingredientDoc: IIngredient) {
+  static fromDoc(ingredientDoc: Ingredient) {
     return new IngredientDto({
-      id: ingredientDoc._id,
+      id: ingredientDoc._id.toString(),
       name: ingredientDoc.name,
       category: ingredientDoc.category,
       description: ingredientDoc.description,

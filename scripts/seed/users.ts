@@ -4,11 +4,16 @@ export const users = [
     email: "bob@gmail.com",
     // password = bob123
     password: "$2b$10$EHCCwe.SDE8atLCqWLglMOkLdh5yl6gJM0ZEY6SwFsZNNdnf9.fX6",
+    name: "Bob Smith",
+    imageUrl:
+      "https://www.shutterstock.com/image-photo/bearded-man-headshot-portrait-600nw-1009304347.jpg",
   },
   {
     _id: "67da699121ed26778eb78053",
     email: "john@gmail.com",
     // password = john123
     password: "$2b$10$MCDNBFZtvKyobGmNfTP6uebT5VZ3fgzrH2x4j1GWTqNJMw.zzz7S2",
+    name: "John Doe",
+    imageUrl: "",
   },
 ];

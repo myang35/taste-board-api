@@ -9,6 +9,7 @@ import { userService } from "@src/app/services/user-service";
 import { requestHandler } from "@src/app/wrappers/request-handler";
 import { queryUtils } from "@src/utils/query-utils";
 import express from "express";
+import { isValidObjectId } from "mongoose";
 
 export const recipesRouter = express.Router();
 
@@ -49,7 +50,21 @@ recipesRouter
         return;
       }
 
-      const recipeDoc = await recipeService.get(req.params.recipeId);
+      if (!isValidObjectId(req.params.recipeId)) {
+        res.status(400).json(
+          new InvalidInputsError({
+            inputs: [
+              {
+                name: "recipeId",
+                message: "Invalid ObjectId",
+              },
+            ],
+          })
+        );
+        return;
+      }
+
+      const recipeDoc = await recipeService.getById(req.params.recipeId);
       if (!recipeDoc) {
         res.status(404).json(new ResourceNotFoundError({ resource: "recipe" }));
         return;
@@ -129,17 +144,15 @@ recipesRouter
         notes,
         shared,
       });
-      const recipeDto = RecipeDto.fromDoc({
-        ...recipeDoc,
-        author: authorDoc,
-      });
+
+      const recipeDto = RecipeDto.fromDoc(recipeDoc);
       res.json(recipeDto);
     })
   )
   .patch(
     requestHandler(async (req, res) => {
       if (!req.params.recipeId) {
-        res.json(
+        res.status(400).json(
           new InvalidInputsError({
             inputs: [
               {
@@ -152,9 +165,25 @@ recipesRouter
         return;
       }
 
+      if (!isValidObjectId(req.params.recipeId)) {
+        res.status(400).json(
+          new InvalidInputsError({
+            inputs: [
+              {
+                name: "recipeId",
+                message: "Invalid ObjectId",
+              },
+            ],
+          })
+        );
+      }
+
       const recipe = req.body;
 
-      const recipeDoc = await recipeService.update(req.params.recipeId, recipe);
+      const recipeDoc = await recipeService.updateById(
+        req.params.recipeId,
+        recipe
+      );
       if (!recipeDoc) {
         res.status(404).json(new ResourceNotFoundError({ resource: "recipe" }));
         return;
@@ -179,7 +208,20 @@ recipesRouter
         return;
       }
 
-      const recipeDoc = await recipeService.delete(req.params.recipeId);
+      if (!isValidObjectId(req.params.recipeId)) {
+        res.status(400).json(
+          new InvalidInputsError({
+            inputs: [
+              {
+                name: "recipeId",
+                message: "Invalid ObjectId",
+              },
+            ],
+          })
+        );
+      }
+
+      const recipeDoc = await recipeService.deleteById(req.params.recipeId);
       if (!recipeDoc) {
         res.status(404).json(new ResourceNotFoundError({ resource: "recipe" }));
         return;

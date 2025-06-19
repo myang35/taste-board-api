@@ -1,29 +1,29 @@
-import type { IUser } from "@src/app/models/user";
+import { User } from "../models/user";
 
 export class UserDto {
   id: string;
   email: string;
   name: string;
-  imgUrl: string;
+  imageUrl: string;
 
   constructor(params: {
     id: string;
     email: string;
     name: string;
-    imgUrl: string;
+    imageUrl: string;
   }) {
     this.id = params.id;
     this.email = params.email;
     this.name = params.name;
-    this.imgUrl = params.imgUrl;
+    this.imageUrl = params.imageUrl;
   }
 
-  static fromDoc(userDoc: IUser) {
+  static fromDoc(userDoc: User) {
     return new UserDto({
-      id: userDoc._id,
+      id: userDoc._id.toString(),
       email: userDoc.email,
       name: userDoc.name ?? "",
-      imgUrl: userDoc.imgUrl ?? "",
+      imageUrl: userDoc.imageUrl ?? "",
     });
   }
 }

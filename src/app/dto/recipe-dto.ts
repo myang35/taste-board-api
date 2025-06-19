@@ -1,15 +1,15 @@
-import { IRecipePopulated } from "@src/app/models/recipe";
-import mongoose from "mongoose";
+import { isDocument } from "@typegoose/typegoose";
+import { Recipe } from "../models/recipe";
 import { UserDto } from "./user-dto";
 
 export class RecipeDto {
   id: string;
-  author: mongoose.Schema.Types.ObjectId | UserDto;
+  author: UserDto;
   name: string;
   description: string;
   imageUrl: string;
-  prepMinutes: number;
-  calories: number;
+  prepMinutes?: number;
+  calories?: number;
   tags: string[];
   ingredients: {
     name: string;
@@ -29,11 +29,10 @@ export class RecipeDto {
     name: string;
     description: string;
     imageUrl: string;
-    prepMinutes: number;
-    calories: number;
+    prepMinutes?: number;
+    calories?: number;
     tags: string[];
     ingredients: {
-      id: string;
       name: string;
       amount: number;
       unit: string;
@@ -62,33 +61,36 @@ export class RecipeDto {
     this.updatedAt = params.updatedAt;
   }
 
-  static fromDoc(recipeDoc: IRecipePopulated) {
+  static fromDoc(recipeDoc: Recipe) {
+    if (!isDocument(recipeDoc.author)) {
+      throw new Error("Author is not populated");
+    }
     return new RecipeDto({
-      id: recipeDoc._id,
+      id: recipeDoc._id.toString(),
       author: new UserDto({
-        id: recipeDoc.author._id,
+        id: recipeDoc.author._id.toString(),
         email: recipeDoc.author.email,
-        name: recipeDoc.author.name,
-        imgUrl: recipeDoc.author.imgUrl,
+        name: recipeDoc.author.name ?? "",
+        imageUrl: recipeDoc.author.imageUrl ?? "",
       }),
       name: recipeDoc.name,
-      description: recipeDoc.description,
-      imageUrl: recipeDoc.imageUrl,
+      description: recipeDoc.description ?? "",
+      imageUrl: recipeDoc.imageUrl ?? "",
       prepMinutes: recipeDoc.prepMinutes,
       calories: recipeDoc.calories,
-      tags: recipeDoc.tags,
-      ingredients: recipeDoc.ingredients.map((ingredient) => ({
-        id: ingredient._id,
-        name: ingredient.name,
-        amount: ingredient.amount,
-        unit: ingredient.unit,
-      })),
+      tags: recipeDoc.tags ?? [],
+      ingredients:
+        recipeDoc.ingredients?.map((ingredient) => ({
+          name: ingredient.name,
+          amount: ingredient.amount,
+          unit: ingredient.unit,
+        })) ?? [],
       steps: recipeDoc.steps,
-      notes: recipeDoc.notes,
+      notes: recipeDoc.notes ?? "",
       shared: recipeDoc.shared,
-      viewCount: recipeDoc.views.length,
-      createdAt: recipeDoc.createdAt.toISOString(),
-      updatedAt: recipeDoc.updatedAt.toISOString(),
+      viewCount: recipeDoc.views?.length ?? 0,
+      createdAt: recipeDoc.createdAt?.toISOString() ?? "",
+      updatedAt: recipeDoc.updatedAt?.toISOString() ?? "",
     });
   }
 }

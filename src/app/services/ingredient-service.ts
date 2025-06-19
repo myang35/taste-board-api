@@ -1,8 +1,9 @@
-import { Ingredient } from "@src/app/models/ingredient";
+import { IngredientModel } from "@src/app/models/ingredient";
+import { Types } from "mongoose";
 
 export const ingredientService = {
   getAll: async (options?: { distinct?: string }) => {
-    const query = Ingredient.find();
+    const query = IngredientModel.find();
 
     if (options?.distinct) {
       query.distinct(options.distinct);
@@ -10,13 +11,13 @@ export const ingredientService = {
 
     return query;
   },
-  get: async (id: string) => {
-    return Ingredient.findById(id);
+  getById: async (id: Types.ObjectId | string) => {
+    return IngredientModel.findById(id);
   },
   create: async (
     ingredients: { name: string; category?: string; description?: string }[]
   ) => {
-    return Ingredient.insertMany(
+    return IngredientModel.insertMany(
       {
         category: "",
         description: "",
@@ -32,13 +33,13 @@ export const ingredientService = {
       return [];
     });
   },
-  delete: async (id: string) => {
-    return Ingredient.findByIdAndDelete(id);
+  deleteById: async (id: Types.ObjectId | string) => {
+    return IngredientModel.findByIdAndDelete(id);
   },
-  update: async (
-    id: string,
+  updateById: async (
+    id: Types.ObjectId | string,
     ingredient: { name?: string; category?: string; description?: string }
   ) => {
-    return Ingredient.findByIdAndUpdate(id, ingredient, { new: true });
+    return IngredientModel.findByIdAndUpdate(id, ingredient, { new: true });
   },
 };

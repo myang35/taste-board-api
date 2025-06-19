@@ -1,105 +1,72 @@
-import mongoose from "mongoose";
-import { IUser } from "./user";
+import {
+  getModelForClass,
+  modelOptions,
+  prop,
+  Ref,
+} from "@typegoose/typegoose";
+import { Base, TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
+import { Types } from "mongoose";
+import { User } from "./user";
 
-export interface IRecipe {
-  _id: string;
-  author: mongoose.Schema.Types.ObjectId;
-  name: string;
-  description: string;
-  imageUrl: string;
-  prepMinutes: number;
-  calories: number;
-  tags: string[];
-  ingredients: {
-    _id: string;
-    name: string;
-    amount: number;
-    unit: string;
-  }[];
-  steps: string[];
-  notes: string;
-  shared: boolean;
-  views: {
-    _id: string;
-    viewer: mongoose.Schema.Types.ObjectId;
-    date: Date;
-  }[];
-  createdAt: Date;
-  updatedAt: Date;
+@modelOptions({ schemaOptions: { timestamps: true } })
+export class Recipe extends TimeStamps implements Base {
+  public _id!: Types.ObjectId;
+  public id!: string;
+
+  @prop({ ref: () => User, required: true })
+  public author!: Ref<User>;
+
+  @prop({ required: true })
+  public name!: string;
+
+  @prop()
+  public description?: string;
+
+  @prop()
+  public imageUrl?: string;
+
+  @prop()
+  public prepMinutes?: number;
+
+  @prop()
+  public calories?: number;
+
+  @prop({ type: () => [String] })
+  public tags?: string[];
+
+  @prop({ type: () => [Ingredient] })
+  public ingredients?: Ingredient[];
+
+  @prop({ type: () => [String], required: true })
+  public steps!: string[];
+
+  @prop()
+  public notes?: string;
+
+  @prop({ required: true })
+  public shared!: boolean;
+
+  @prop({ type: () => [View] })
+  public views?: View[];
 }
 
-export interface IRecipePopulated extends Omit<IRecipe, "author"> {
-  author: IUser;
+export class Ingredient {
+  @prop({ required: true })
+  public name!: string;
+
+  @prop({ required: true })
+  public amount!: number;
+
+  @prop({ required: true })
+  public unit!: string;
 }
 
-export const recipeSchema = new mongoose.Schema<IRecipe>(
-  {
-    author: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    name: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    description: {
-      type: String,
-    },
-    imageUrl: {
-      type: String,
-    },
-    prepMinutes: {
-      type: Number,
-    },
-    calories: {
-      type: Number,
-    },
-    tags: {
-      type: [String],
-      default: [],
-    },
-    ingredients: {
-      type: [
-        {
-          name: String,
-          amount: Number,
-          unit: String,
-        },
-      ],
-      required: true,
-    },
-    steps: {
-      type: [String],
-      required: true,
-    },
-    notes: {
-      type: String,
-    },
-    shared: {
-      type: Boolean,
-      required: true,
-    },
-    views: {
-      type: [
-        {
-          viewer: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-          },
-          date: {
-            type: Date,
-            default: Date.now,
-          },
-        },
-      ],
-      default: [],
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
+export class View {
+  @prop({ ref: () => User, required: true })
+  public viewer!: Ref<User>;
 
-export const Recipe = mongoose.model<IRecipe>("Recipe", recipeSchema);
+  @prop({ default: Date.now })
+  public date?: Date;
+}
+
+export const RecipeModel = getModelForClass(Recipe);

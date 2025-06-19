@@ -1,27 +1,20 @@
-import mongoose from "mongoose";
+import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
+import { Base, TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
+import { Types } from "mongoose";
 
-export interface IIngredient {
-  _id: string;
-  name: string;
-  category: string;
-  description: string;
+@modelOptions({ schemaOptions: { timestamps: true } })
+export class Ingredient extends TimeStamps implements Base {
+  public _id!: Types.ObjectId;
+  public id!: string;
+
+  @prop({ required: true, unique: true })
+  public name!: string;
+
+  @prop()
+  public category?: string;
+
+  @prop()
+  public description?: string;
 }
 
-export const ingredientSchema = new mongoose.Schema<IIngredient>({
-  name: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  category: {
-    type: String,
-  },
-  description: {
-    type: String,
-  },
-});
-
-export const Ingredient = mongoose.model<IIngredient>(
-  "Ingredient",
-  ingredientSchema
-);
+export const IngredientModel = getModelForClass(Ingredient);

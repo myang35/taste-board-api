@@ -1,6 +1,6 @@
 import { RecipeModel } from "@src/app/models/recipe";
 import { dateUtils } from "@src/utils/date-utils";
-import { isValidObjectId, PipelineStage, Types } from "mongoose";
+import { PipelineStage, Types } from "mongoose";
 
 export const recipeService = {
   getAll: async (options?: {
@@ -99,7 +99,6 @@ export const recipeService = {
     return RecipeModel.populate(recipeDocs, { path: "author" });
   },
   getById: async (id: Types.ObjectId | string) => {
-    if (!isValidObjectId(id)) return null;
     return RecipeModel.findById(id).populate("author").lean();
   },
   create: async (recipe: {

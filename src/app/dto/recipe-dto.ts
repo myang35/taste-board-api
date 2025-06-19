@@ -1,4 +1,4 @@
-import { isDocument } from "@typegoose/typegoose";
+import { dbUtils } from "@src/utils/db-utils";
 import { Recipe } from "../models/recipe";
 import { UserDto } from "./user-dto";
 
@@ -62,7 +62,7 @@ export class RecipeDto {
   }
 
   static fromDoc(recipeDoc: Recipe) {
-    if (!isDocument(recipeDoc.author)) {
+    if (!dbUtils.isPopulated(recipeDoc.author)) {
       throw new Error("Author is not populated");
     }
     return new RecipeDto({

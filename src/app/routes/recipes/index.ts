@@ -42,6 +42,7 @@ recipesRouter
           search: queryUtils.toString(req.query.search),
           limit: queryUtils.toInt(req.query.limit),
           skip: queryUtils.toInt(req.query.skip),
+          userId: queryUtils.toString(req.query.userId),
         };
 
         const recipeDocs = await recipeService.getAll(query);

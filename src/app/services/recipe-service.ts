@@ -1,5 +1,6 @@
 import { RecipeModel } from "@src/app/models/recipe";
 import { dateUtils } from "@src/utils/date-utils";
+import { ObjectId } from "mongodb";
 import { PipelineStage, Types } from "mongoose";
 
 export const recipeService = {
@@ -8,6 +9,7 @@ export const recipeService = {
     sort?: string;
     limit?: number;
     skip?: number;
+    userId?: string;
   }) => {
     const oneMonthAgo = dateUtils.createDateAfter(-1000 * 60 * 60 * 24 * 30);
     const pipelineStages: PipelineStage[] = [
@@ -30,6 +32,14 @@ export const recipeService = {
         },
       },
     ];
+
+    if (options?.userId) {
+      pipelineStages.push({
+        $match: {
+          author: new ObjectId(options.userId),
+        },
+      });
+    }
 
     if (
       options?.sort &&

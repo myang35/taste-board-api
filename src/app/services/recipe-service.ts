@@ -143,6 +143,7 @@ export const recipeService = {
       prepMinutes: recipe.prepMinutes,
       calories: recipe.calories,
       tags: recipe.tags,
+      notes: recipe.notes,
       views: recipe.views,
     });
     const populatedRecipeDoc = await recipeDoc.populate("author");

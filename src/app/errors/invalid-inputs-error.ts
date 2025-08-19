@@ -10,7 +10,7 @@ export class InvalidInputsError extends BaseError<{
 }> {
   constructor(params: { inputs: InvalidInputsErrorInput[] }) {
     super({
-      error: "INVALID_INPUTS",
+      code: "INVALID_INPUTS",
       message: "Invalid inputs",
       data: {
         inputs: params.inputs,

@@ -3,7 +3,7 @@ import { BaseError } from "./base-error";
 export class InternalServerError extends BaseError<{ error: any }> {
   constructor(params: { error: any }) {
     super({
-      error: "INTERNAL_SERVER_ERROR",
+      code: "INTERNAL_SERVER_ERROR",
       message: (() => {
         if (params.error instanceof Error) return params.error.message;
         if (typeof params.error === "string") return params.error;

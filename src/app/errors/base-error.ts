@@ -1,10 +1,10 @@
 export class BaseError<DataType = undefined> {
-  error: string;
+  code: string;
   message: string;
   data: DataType;
 
-  constructor(params: { error: string; message: string; data?: any }) {
-    this.error = params.error;
+  constructor(params: { code: string; message: string; data?: any }) {
+    this.code = params.code;
     this.message = params.message;
     this.data = params.data;
   }

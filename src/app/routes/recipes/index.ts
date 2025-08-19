@@ -115,7 +115,7 @@ recipesRouter
           message: "Required",
         });
       }
-      if (!shared) {
+      if (typeof shared !== "boolean") {
         invalidInputs.push({
           name: "shared",
           message: "Required",

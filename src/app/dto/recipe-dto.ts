@@ -103,7 +103,6 @@ export class RecipeDto {
       name: recipeDoc.name,
       servings: recipeDoc.servings,
       description: recipeDoc.description ?? "",
-      prepMinutes: recipeDoc.prepMinutes,
       cookMinutes: recipeDoc.cookMinutes,
       difficulty: recipeDoc.difficulty,
       imageUrl: recipeDoc.imageUrl ?? "",

@@ -116,7 +116,6 @@ export const recipeService = {
     name: string;
     servings?: number;
     description?: string;
-    prepMinutes?: number;
     cookMinutes?: number;
     difficulty?: number;
     imageUrl?: string;
@@ -144,17 +143,24 @@ export const recipeService = {
     }[];
   }) => {
     const recipeDoc = await RecipeModel.create({
-      name: recipe.name,
       author: recipe.authorId,
+      name: recipe.name,
+      servings: recipe.servings,
+      description: recipe.description,
+      cookMinutes: recipe.cookMinutes,
+      difficulty: recipe.difficulty,
+      imageUrl: recipe.imageUrl,
+      tags: recipe.tags,
       ingredients: recipe.ingredients,
       instructions: recipe.instructions,
-      shared: recipe.shared,
-      description: recipe.description,
-      imageUrl: recipe.imageUrl,
-      prepMinutes: recipe.prepMinutes,
       calories: recipe.calories,
-      tags: recipe.tags,
+      proteinGrams: recipe.proteinGrams,
+      carbohydratesGrams: recipe.carbohydratesGrams,
+      fatGrams: recipe.fatGrams,
+      fiberGrams: recipe.fiberGrams,
+      sugarGrams: recipe.sugarGrams,
       notes: recipe.notes,
+      shared: recipe.shared,
       views: recipe.views,
     });
     const populatedRecipeDoc = await recipeDoc.populate("author");
@@ -170,7 +176,6 @@ export const recipeService = {
       name?: string;
       servings?: number;
       description?: string;
-      prepMinutes?: number;
       cookMinutes?: number;
       difficulty?: number;
       imageUrl?: string;
@@ -197,7 +202,7 @@ export const recipeService = {
       views?: {
         viewer: string;
         date: number;
-      };
+      }[];
     }
   ) => {
     return RecipeModel.findByIdAndUpdate(
@@ -207,7 +212,6 @@ export const recipeService = {
         name: recipe.name,
         servings: recipe.servings,
         description: recipe.description,
-        prepMinutes: recipe.prepMinutes,
         cookMinutes: recipe.cookMinutes,
         difficulty: recipe.difficulty,
         imageUrl: recipe.imageUrl,

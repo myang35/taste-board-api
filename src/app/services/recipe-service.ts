@@ -112,20 +112,31 @@ export const recipeService = {
     return RecipeModel.findById(id).populate("author").lean();
   },
   create: async (recipe: {
-    name: string;
     authorId: string;
-    ingredients: {
+    name: string;
+    servings?: number;
+    description?: string;
+    prepMinutes?: number;
+    cookMinutes?: number;
+    difficulty?: number;
+    imageUrl?: string;
+    tags?: string[];
+    ingredients?: {
       name: string;
       amount: number;
       unit: string;
     }[];
-    steps: string[];
-    shared: boolean;
-    description?: string;
-    imageUrl?: string;
-    prepMinutes?: number;
+    instructions?: {
+      description: string;
+      minutes?: number;
+    }[];
     calories?: number;
-    tags?: string[];
+    proteinGrams?: number;
+    carbohydratesGrams?: number;
+    fatGrams?: number;
+    fiberGrams?: number;
+    sugarGrams?: number;
+    shared?: boolean;
     notes?: string;
     views?: {
       viewer: string;
@@ -136,7 +147,7 @@ export const recipeService = {
       name: recipe.name,
       author: recipe.authorId,
       ingredients: recipe.ingredients,
-      steps: recipe.steps,
+      instructions: recipe.instructions,
       shared: recipe.shared,
       description: recipe.description,
       imageUrl: recipe.imageUrl,
@@ -157,17 +168,29 @@ export const recipeService = {
     recipe: {
       authorId?: string;
       name?: string;
+      servings?: number;
       description?: string;
-      imageUrl?: string;
       prepMinutes?: number;
-      calories?: number;
+      cookMinutes?: number;
+      difficulty?: number;
+      imageUrl?: string;
       tags?: string[];
       ingredients?: {
         name: string;
         amount: number;
         unit: string;
+        minutes: number;
       }[];
-      steps?: string[];
+      instructions?: {
+        description: string;
+        minutes?: number;
+      }[];
+      calories?: number;
+      proteinGrams?: number;
+      carbohydratesGrams?: number;
+      fatGrams?: number;
+      fiberGrams?: number;
+      sugarGrams?: number;
       viewCount?: number;
       notes?: string;
       shared?: boolean;
@@ -182,13 +205,21 @@ export const recipeService = {
       {
         author: recipe.authorId,
         name: recipe.name,
+        servings: recipe.servings,
         description: recipe.description,
-        imageUrl: recipe.imageUrl,
         prepMinutes: recipe.prepMinutes,
-        calories: recipe.calories,
+        cookMinutes: recipe.cookMinutes,
+        difficulty: recipe.difficulty,
+        imageUrl: recipe.imageUrl,
         tags: recipe.tags,
         ingredients: recipe.ingredients,
-        steps: recipe.steps,
+        instructions: recipe.instructions,
+        calories: recipe.calories,
+        proteinGrams: recipe.proteinGrams,
+        carbohydratesGrams: recipe.carbohydratesGrams,
+        fatGrams: recipe.fatGrams,
+        fiberGrams: recipe.fiberGrams,
+        sugarGrams: recipe.sugarGrams,
         viewCount: recipe.viewCount,
         notes: recipe.notes,
         shared: recipe.shared,

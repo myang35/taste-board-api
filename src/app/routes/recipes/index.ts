@@ -76,75 +76,32 @@ recipesRouter
   )
   .post(
     requestHandler(async (req, res) => {
-      const {
-        name,
-        authorId,
-        description,
-        imageUrl,
-        prepMinutes,
-        calories,
-        tags,
-        ingredients,
-        steps,
-        notes,
-        shared,
-      } = req.body;
-
       const invalidInputs: InvalidInputsErrorInput[] = [];
-      if (!name) {
-        invalidInputs.push({
-          name: "name",
-          message: "Required",
-        });
-      }
-      if (!authorId) {
+      if (!req.body.authorId) {
         invalidInputs.push({
           name: "authorId",
           message: "Required",
         });
       }
-      if (!ingredients) {
+      if (!req.body.name) {
         invalidInputs.push({
-          name: "ingredients",
+          name: "name",
           message: "Required",
         });
       }
-      if (!steps) {
-        invalidInputs.push({
-          name: "steps",
-          message: "Required",
-        });
-      }
-      if (typeof shared !== "boolean") {
-        invalidInputs.push({
-          name: "shared",
-          message: "Required",
-        });
-      }
+
       if (invalidInputs.length > 0) {
         res.status(400).json(new InvalidInputsError({ inputs: invalidInputs }));
         return;
       }
 
-      const authorDoc = await userService.getById(authorId);
+      const authorDoc = await userService.getById(req.body.authorId);
       if (!authorDoc) {
         res.status(404).json(new ResourceNotFoundError({ resource: "user" }));
         return;
       }
 
-      const recipeDoc = await recipeService.create({
-        name,
-        authorId,
-        description,
-        imageUrl,
-        prepMinutes,
-        calories,
-        tags,
-        ingredients,
-        steps,
-        notes,
-        shared,
-      });
+      const recipeDoc = await recipeService.create(req.body);
 
       const recipeDto = RecipeDto.fromDoc(recipeDoc);
       res.json(recipeDto);
@@ -179,11 +136,9 @@ recipesRouter
         );
       }
 
-      const recipe = req.body;
-
       const recipeDoc = await recipeService.updateById(
         req.params.recipeId,
-        recipe
+        req.body
       );
       if (!recipeDoc) {
         res.status(404).json(new ResourceNotFoundError({ resource: "recipe" }));

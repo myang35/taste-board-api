@@ -20,33 +20,57 @@ export class Recipe extends TimeStamps implements Base {
   public name!: string;
 
   @prop()
-  public description?: string;
+  public servings?: number;
 
-  @prop()
-  public imageUrl?: string;
+  @prop({ default: "" })
+  public description?: string;
 
   @prop()
   public prepMinutes?: number;
 
   @prop()
-  public calories?: number;
-
-  @prop({ type: () => [String] })
-  public tags?: string[];
-
-  @prop({ type: () => [Ingredient] })
-  public ingredients?: Ingredient[];
-
-  @prop({ type: () => [String], required: true })
-  public steps!: string[];
+  public cookMinutes?: number;
 
   @prop()
+  public difficulty?: number;
+
+  @prop({ default: "" })
+  public imageUrl?: string;
+
+  @prop({ type: () => [String], default: [] })
+  public tags?: string[];
+
+  @prop({ type: () => [Ingredient], default: [] })
+  public ingredients?: Ingredient[];
+
+  @prop({ type: () => [Instruction], default: [] })
+  public instructions?: Instruction[];
+
+  @prop()
+  public calories?: number;
+
+  @prop()
+  public proteinGrams?: number;
+
+  @prop()
+  public carbohydratesGrams?: number;
+
+  @prop()
+  public fatGrams?: number;
+
+  @prop()
+  public fiberGrams?: number;
+
+  @prop()
+  public sugarGrams?: number;
+
+  @prop({ default: "" })
   public notes?: string;
 
-  @prop({ required: true })
-  public shared!: boolean;
+  @prop({ default: false })
+  public shared?: boolean;
 
-  @prop({ type: () => [View] })
+  @prop({ type: () => [View], default: [] })
   public views?: View[];
 }
 
@@ -59,6 +83,17 @@ export class Ingredient {
 
   @prop({ required: true })
   public unit!: string;
+
+  @prop()
+  public notes?: string;
+}
+
+export class Instruction {
+  @prop({ required: true })
+  public description!: string;
+
+  @prop()
+  public minutes?: number;
 }
 
 export class View {

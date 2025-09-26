@@ -6,17 +6,29 @@ export class RecipeDto {
   id: string;
   author: UserDto;
   name: string;
+  servings?: number;
   description: string;
-  imageUrl: string;
   prepMinutes?: number;
-  calories?: number;
+  cookMinutes?: number;
+  difficulty?: number;
+  imageUrl: string;
   tags: string[];
   ingredients: {
     name: string;
     amount: number;
     unit: string;
+    notes: string;
   }[];
-  steps: string[];
+  instructions: {
+    description: string;
+    minutes?: number;
+  }[];
+  calories?: number;
+  proteinGrams?: number;
+  carbohydratesGrams?: number;
+  fatGrams?: number;
+  fiberGrams?: number;
+  sugarGrams?: number;
   notes: string;
   shared: boolean;
   viewCount: number;
@@ -27,17 +39,29 @@ export class RecipeDto {
     id: string;
     author: UserDto;
     name: string;
+    servings?: number;
     description: string;
-    imageUrl: string;
     prepMinutes?: number;
-    calories?: number;
+    cookMinutes?: number;
+    difficulty?: number;
+    imageUrl: string;
     tags: string[];
     ingredients: {
       name: string;
       amount: number;
       unit: string;
+      notes: string;
     }[];
-    steps: string[];
+    instructions: {
+      description: string;
+      minutes?: number;
+    }[];
+    calories?: number;
+    proteinGrams?: number;
+    carbohydratesGrams?: number;
+    fatGrams?: number;
+    fiberGrams?: number;
+    sugarGrams?: number;
     notes: string;
     shared: boolean;
     viewCount: number;
@@ -47,13 +71,21 @@ export class RecipeDto {
     this.id = params.id;
     this.author = params.author;
     this.name = params.name;
+    this.servings = params.servings;
     this.description = params.description;
-    this.imageUrl = params.imageUrl;
     this.prepMinutes = params.prepMinutes;
-    this.calories = params.calories;
+    this.cookMinutes = params.cookMinutes;
+    this.difficulty = params.difficulty;
+    this.imageUrl = params.imageUrl;
     this.tags = params.tags;
     this.ingredients = params.ingredients;
-    this.steps = params.steps;
+    this.instructions = params.instructions;
+    this.calories = params.calories;
+    this.proteinGrams = params.proteinGrams;
+    this.carbohydratesGrams = params.carbohydratesGrams;
+    this.fatGrams = params.fatGrams;
+    this.fiberGrams = params.fiberGrams;
+    this.sugarGrams = params.sugarGrams;
     this.notes = params.notes;
     this.shared = params.shared;
     this.viewCount = params.viewCount;
@@ -67,27 +99,31 @@ export class RecipeDto {
     }
     return new RecipeDto({
       id: recipeDoc._id.toString(),
-      author: new UserDto({
-        id: recipeDoc.author._id.toString(),
-        email: recipeDoc.author.email,
-        name: recipeDoc.author.name ?? "",
-        imageUrl: recipeDoc.author.imageUrl ?? "",
-      }),
+      author: UserDto.fromDoc(recipeDoc.author),
       name: recipeDoc.name,
+      servings: recipeDoc.servings,
       description: recipeDoc.description ?? "",
-      imageUrl: recipeDoc.imageUrl ?? "",
       prepMinutes: recipeDoc.prepMinutes,
-      calories: recipeDoc.calories,
+      cookMinutes: recipeDoc.cookMinutes,
+      difficulty: recipeDoc.difficulty,
+      imageUrl: recipeDoc.imageUrl ?? "",
       tags: recipeDoc.tags ?? [],
       ingredients:
         recipeDoc.ingredients?.map((ingredient) => ({
-          name: ingredient.name,
+          name: ingredient.name ?? "",
           amount: ingredient.amount,
           unit: ingredient.unit,
+          notes: ingredient.notes ?? "",
         })) ?? [],
-      steps: recipeDoc.steps,
+      instructions: recipeDoc.instructions ?? [],
+      calories: recipeDoc.calories,
+      proteinGrams: recipeDoc.proteinGrams,
+      carbohydratesGrams: recipeDoc.carbohydratesGrams,
+      fatGrams: recipeDoc.fatGrams,
+      fiberGrams: recipeDoc.fiberGrams,
+      sugarGrams: recipeDoc.sugarGrams,
       notes: recipeDoc.notes ?? "",
-      shared: recipeDoc.shared,
+      shared: recipeDoc.shared ?? false,
       viewCount: recipeDoc.views?.length ?? 0,
       createdAt: recipeDoc.createdAt?.toISOString() ?? "",
       updatedAt: recipeDoc.updatedAt?.toISOString() ?? "",

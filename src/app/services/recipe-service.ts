@@ -79,7 +79,7 @@ export const recipeService = {
               case "trending":
                 result = {
                   recentViews: -1,
-                  totalsViews: -1,
+                  totalViews: -1,
                 };
                 break;
               default:

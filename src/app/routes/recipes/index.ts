@@ -13,8 +13,7 @@ import { isValidObjectId } from "mongoose";
 
 export const recipesRouter = express.Router();
 
-recipesRouter.get(
-  "/count",
+recipesRouter.route("/count").get(
   requestHandler(async (req, res) => {
     const query = {
       search: queryUtils.toString(req.query.search),
@@ -22,6 +21,36 @@ recipesRouter.get(
 
     const count = await recipeService.count(query);
     res.json({ result: count });
+  })
+);
+
+recipesRouter.route("/random/:size").get(
+  requestHandler(async (req, res) => {
+    const size = Number.parseInt(req.params.size);
+    if (size <= 0 || Number.isNaN(size)) {
+      res.status(400).json(
+        new InvalidInputsError({
+          inputs: [
+            {
+              name: "size",
+              message: "Invalid number",
+            },
+          ],
+        })
+      );
+      return;
+    }
+
+    const recipeDoc = await recipeService.getRandom(
+      req.params.size ? parseInt(req.params.size) : 1
+    );
+    if (!recipeDoc) {
+      res.status(404).json(new ResourceNotFoundError({ resource: "recipe" }));
+      return;
+    }
+
+    const recipeDtos = recipeDoc.map(RecipeDto.fromDoc);
+    res.json(recipeDtos);
   })
 );
 

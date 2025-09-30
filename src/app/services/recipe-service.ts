@@ -111,6 +111,11 @@ export const recipeService = {
   getById: async (id: Types.ObjectId | string) => {
     return RecipeModel.findById(id).populate("author").lean();
   },
+  getRandom: async (size: number) => {
+    const recipeDocs = await RecipeModel.aggregate([{ $sample: { size } }]);
+    if (recipeDocs.length === 0) return null;
+    return RecipeModel.populate(recipeDocs, { path: "author" });
+  },
   create: async (recipe: {
     authorId: string;
     name: string;

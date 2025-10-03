@@ -4,6 +4,7 @@ import {
   InvalidInputsErrorInput,
 } from "@src/app/errors/invalid-inputs-error";
 import { ResourceNotFoundError } from "@src/app/errors/resource-not-found-error";
+import { authenticate } from "@src/app/middleware/authenticate";
 import { recipeService } from "@src/app/services/recipe-service";
 import { userService } from "@src/app/services/user-service";
 import { requestHandler } from "@src/app/wrappers/request-handler";
@@ -104,9 +105,10 @@ recipesRouter
     })
   )
   .post(
+    authenticate,
     requestHandler(async (req, res) => {
       const invalidInputs: InvalidInputsErrorInput[] = [];
-      if (!req.body.authorId) {
+      if (!res.locals.user?.id) {
         invalidInputs.push({
           name: "authorId",
           message: "Required",
@@ -124,13 +126,16 @@ recipesRouter
         return;
       }
 
-      const authorDoc = await userService.getById(req.body.authorId);
+      const authorDoc = await userService.getById(res.locals.user.id);
       if (!authorDoc) {
         res.status(404).json(new ResourceNotFoundError({ resource: "user" }));
         return;
       }
 
-      const recipeDoc = await recipeService.create(req.body);
+      const recipeDoc = await recipeService.create({
+        authorId: authorDoc._id,
+        ...req.body,
+      });
 
       const recipeDto = RecipeDto.fromDoc(recipeDoc);
       res.json(recipeDto);

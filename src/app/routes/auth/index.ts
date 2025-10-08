@@ -79,7 +79,7 @@ authRouter
   .post(
     "/signup",
     requestHandler(async (req, res) => {
-      const { email, password } = req.body;
+      const { name, email, password } = req.body;
 
       const error = await validateInputs(req.body);
       if (error) {
@@ -88,6 +88,7 @@ authRouter
       }
 
       const userDoc = await userService.create({
+        name,
         email,
         password,
       });
@@ -107,6 +108,13 @@ authRouter
 
       async function validateInputs(inputs: any) {
         const inputErrors: InvalidInputsErrorInput[] = [];
+
+        if (!inputs.name) {
+          inputErrors.push({
+            name: "name",
+            message: "Required",
+          });
+        }
 
         if (inputs.email) {
           const existingUserDoc = await userService.getByEmail(inputs.email);

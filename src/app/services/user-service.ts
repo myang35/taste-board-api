@@ -17,9 +17,10 @@ export const userService = {
   getByEmail: async (email: string) => {
     return UserModel.findOne({ email }).lean();
   },
-  create: async (user: { email: string; password: string }) => {
+  create: async (user: { name: string; email: string; password: string }) => {
     const hashPassword = await bcrypt.hash(user.password, 10);
     return UserModel.create({
+      name: user.name,
       email: user.email,
       password: hashPassword,
     });

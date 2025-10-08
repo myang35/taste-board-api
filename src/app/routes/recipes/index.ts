@@ -4,6 +4,7 @@ import {
   InvalidInputsErrorInput,
 } from "@src/app/errors/invalid-inputs-error";
 import { ResourceNotFoundError } from "@src/app/errors/resource-not-found-error";
+import { UnauthorizedError } from "@src/app/errors/unauthorized-error";
 import { authenticate } from "@src/app/middleware/authenticate";
 import { recipeService } from "@src/app/services/recipe-service";
 import { userService } from "@src/app/services/user-service";
@@ -108,12 +109,7 @@ recipesRouter
     authenticate,
     requestHandler(async (req, res) => {
       const invalidInputs: InvalidInputsErrorInput[] = [];
-      if (!res.locals.user?.id) {
-        invalidInputs.push({
-          name: "authorId",
-          message: "Required",
-        });
-      }
+
       if (!req.body.name) {
         invalidInputs.push({
           name: "name",
@@ -142,80 +138,90 @@ recipesRouter
     })
   )
   .patch(
+    authenticate,
     requestHandler(async (req, res) => {
+      const invalidInputs: InvalidInputsErrorInput[] = [];
+
       if (!req.params.recipeId) {
-        res.status(400).json(
-          new InvalidInputsError({
-            inputs: [
-              {
-                name: "recipeId",
-                message: "Required",
-              },
-            ],
-          })
-        );
+        invalidInputs.push({
+          name: "recipeId",
+          message: "Required",
+        });
+      } else if (!isValidObjectId(req.params.recipeId)) {
+        invalidInputs.push({
+          name: "recipeId",
+          message: "Invalid ObjectId",
+        });
+      }
+
+      if (invalidInputs.length > 0) {
+        res.status(400).json(new InvalidInputsError({ inputs: invalidInputs }));
         return;
       }
 
-      if (!isValidObjectId(req.params.recipeId)) {
-        res.status(400).json(
-          new InvalidInputsError({
-            inputs: [
-              {
-                name: "recipeId",
-                message: "Invalid ObjectId",
-              },
-            ],
-          })
-        );
-      }
+      const recipeDoc = await recipeService.getById(req.params.recipeId!);
 
-      const recipeDoc = await recipeService.updateById(
-        req.params.recipeId,
-        req.body
-      );
       if (!recipeDoc) {
         res.status(404).json(new ResourceNotFoundError({ resource: "recipe" }));
         return;
       }
+
+      if (recipeDoc.author._id.toString() !== res.locals.user.id) {
+        res.status(403).json(new UnauthorizedError());
+        return;
+      }
+
+      await recipeService.updateById(req.params.recipeId!, req.body);
+
       const recipeDto = RecipeDto.fromDoc(recipeDoc);
       res.json(recipeDto);
     })
   )
   .delete(
+    authenticate,
     requestHandler(async (req, res) => {
+      const invalidInputs: InvalidInputsErrorInput[] = [];
+
+      if (!res.locals.user?.id) {
+        invalidInputs.push({
+          name: "authorId",
+          message: "Required",
+        });
+      }
+
       if (!req.params.recipeId) {
-        res.status(400).json(
-          new InvalidInputsError({
-            inputs: [
-              {
-                name: "recipeId",
-                message: "Required",
-              },
-            ],
-          })
-        );
-        return;
+        invalidInputs.push({
+          name: "recipeId",
+          message: "Required",
+        });
       }
 
       if (!isValidObjectId(req.params.recipeId)) {
-        res.status(400).json(
-          new InvalidInputsError({
-            inputs: [
-              {
-                name: "recipeId",
-                message: "Invalid ObjectId",
-              },
-            ],
-          })
-        );
+        invalidInputs.push({
+          name: "recipeId",
+          message: "Invalid ObjectId",
+        });
       }
 
-      const recipeDoc = await recipeService.deleteById(req.params.recipeId);
+      if (invalidInputs.length > 0) {
+        res.status(400).json(new InvalidInputsError({ inputs: invalidInputs }));
+        return;
+      }
+
+      const recipeDoc = await recipeService.getById(req.params.recipeId!);
+
       if (!recipeDoc) {
         res.status(404).json(new ResourceNotFoundError({ resource: "recipe" }));
         return;
       }
+
+      if (recipeDoc.author._id.toString() !== res.locals.user.id) {
+        res.status(403).json(new UnauthorizedError());
+        return;
+      }
+
+      await recipeService.deleteById(req.params.recipeId!);
+
       const recipeDto = RecipeDto.fromDoc(recipeDoc);
       res.json(recipeDto);
     })

@@ -19,9 +19,9 @@ export const recipes = [
         unit: "packet",
         notes: "sifted",
       },
-      { name: "Bananas", amount: 3, unit: "pieces", notes: "ripe" },
-      { name: "Vanilla wafers", amount: 200, unit: "grams", notes: "" },
-      { name: "Milk", amount: 2, unit: "cups", notes: "room temperature" },
+      { name: "Bananas", amount: 3, unit: "piece", notes: "ripe" },
+      { name: "Vanilla wafers", amount: 200, unit: "gram", notes: "" },
+      { name: "Milk", amount: 2, unit: "cup", notes: "room temperature" },
     ],
     instructions: [
       {
@@ -74,10 +74,10 @@ export const recipes = [
       "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?resize=768,574",
     tags: ["italian", "cheesy", "dinner", "comfort food"],
     ingredients: [
-      { name: "Gnocchi", amount: 500, unit: "grams", notes: "softened" },
-      { name: "Chorizo", amount: 200, unit: "grams", notes: "diced" },
-      { name: "Mozzarella", amount: 150, unit: "grams", notes: "" },
-      { name: "Tomato sauce", amount: 2, unit: "cups", notes: "optional" },
+      { name: "Gnocchi", amount: 500, unit: "gram", notes: "softened" },
+      { name: "Chorizo", amount: 200, unit: "gram", notes: "diced" },
+      { name: "Mozzarella", amount: 150, unit: "gram", notes: "" },
+      { name: "Tomato sauce", amount: 2, unit: "cup", notes: "optional" },
     ],
     instructions: [
       { description: "Preheat oven to 200°C (400°F).", minutes: 10 },
@@ -135,9 +135,9 @@ export const recipes = [
     tags: ["appetizer", "vegetarian", "shareable", "fresh"],
     ingredients: [
       { name: "Hummus", amount: 1, unit: "cup", notes: "" },
-      { name: "Pita bread", amount: 2, unit: "pieces", notes: "sliced" },
-      { name: "Olives", amount: 150, unit: "grams", notes: "pitted" },
-      { name: "Feta cheese", amount: 100, unit: "grams", notes: "" },
+      { name: "Pita bread", amount: 2, unit: "piece", notes: "sliced" },
+      { name: "Olives", amount: 150, unit: "gram", notes: "pitted" },
+      { name: "Feta cheese", amount: 100, unit: "gram", notes: "" },
     ],
     instructions: [
       {
@@ -183,15 +183,15 @@ export const recipes = [
       {
         name: "Penne pasta",
         amount: 500,
-        unit: "grams",
+        unit: "gram",
         notes: "cooked al dente",
       },
-      { name: "Vodka sauce", amount: 2, unit: "cups", notes: "" },
-      { name: "Ground beef", amount: 300, unit: "grams", notes: "lean" },
+      { name: "Vodka sauce", amount: 2, unit: "cup", notes: "" },
+      { name: "Ground beef", amount: 300, unit: "gram", notes: "lean" },
       {
         name: "Parmesan cheese",
         amount: 50,
-        unit: "grams",
+        unit: "gram",
         notes: "freshly grated",
       },
     ],
@@ -233,9 +233,9 @@ export const recipes = [
       "https://meaningfuleats.com/wp-content/uploads/2013/08/gluten-free-angel-food-cake.jpg",
     tags: ["dessert", "gluten-free", "sweet", "baking"],
     ingredients: [
-      { name: "Gluten-free flour", amount: 1.5, unit: "cups", notes: "" },
+      { name: "Gluten-free flour", amount: 1.5, unit: "cup", notes: "" },
       { name: "Sugar", amount: 1, unit: "cup", notes: "granulated" },
-      { name: "Egg whites", amount: 12, unit: "pieces", notes: "" },
+      { name: "Egg whites", amount: 12, unit: "piece", notes: "" },
       { name: "Vanilla extract", amount: 1, unit: "teaspoon", notes: "" },
     ],
     instructions: [

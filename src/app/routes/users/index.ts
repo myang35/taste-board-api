@@ -22,12 +22,7 @@ usersRouter
       if (!isValidObjectId(req.params.userId)) {
         res.status(400).json(
           new InvalidInputsError({
-            inputs: [
-              {
-                name: "userId",
-                message: "Invalid ObjectId",
-              },
-            ],
+            inputs: { userId: "Invalid ObjectId" },
           })
         );
         return;
@@ -47,12 +42,7 @@ usersRouter
       if (!req.params.userId) {
         res.json(
           new InvalidInputsError({
-            inputs: [
-              {
-                name: "userId",
-                message: "Required",
-              },
-            ],
+            inputs: { userId: "Required" },
           })
         );
         return;
@@ -61,12 +51,7 @@ usersRouter
       if (!isValidObjectId(req.params.userId)) {
         res.status(400).json(
           new InvalidInputsError({
-            inputs: [
-              {
-                name: "userId",
-                message: "Invalid ObjectId",
-              },
-            ],
+            inputs: { userId: "Invalid ObjectId" },
           })
         );
         return;
@@ -88,12 +73,7 @@ usersRouter
       if (!req.params.userId) {
         res.status(400).json(
           new InvalidInputsError({
-            inputs: [
-              {
-                name: "userId",
-                message: "Required",
-              },
-            ],
+            inputs: { userId: "Required" },
           })
         );
         return;
@@ -102,12 +82,7 @@ usersRouter
       if (!isValidObjectId(req.params.userId)) {
         res.status(400).json(
           new InvalidInputsError({
-            inputs: [
-              {
-                name: "userId",
-                message: "Invalid ObjectId",
-              },
-            ],
+            inputs: { userId: "Invalid ObjectId" },
           })
         );
         return;

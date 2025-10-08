@@ -1,8 +1,5 @@
 import { RecipeDto } from "@src/app/dto/recipe-dto";
-import {
-  InvalidInputsError,
-  InvalidInputsErrorInput,
-} from "@src/app/errors/invalid-inputs-error";
+import { InvalidInputsError } from "@src/app/errors/invalid-inputs-error";
 import { ResourceNotFoundError } from "@src/app/errors/resource-not-found-error";
 import { UnauthorizedError } from "@src/app/errors/unauthorized-error";
 import { authenticate } from "@src/app/middleware/authenticate";
@@ -32,12 +29,9 @@ recipesRouter.route("/random/:size").get(
     if (size <= 0 || Number.isNaN(size)) {
       res.status(400).json(
         new InvalidInputsError({
-          inputs: [
-            {
-              name: "size",
-              message: "Invalid number",
-            },
-          ],
+          inputs: {
+            size: "Must be a positive integer",
+          },
         })
       );
       return;
@@ -85,12 +79,9 @@ recipesRouter
       if (!isValidObjectId(req.params.recipeId)) {
         res.status(400).json(
           new InvalidInputsError({
-            inputs: [
-              {
-                name: "recipeId",
-                message: "Invalid ObjectId",
-              },
-            ],
+            inputs: {
+              recipeId: "Invalid ObjectId",
+            },
           })
         );
         return;
@@ -108,17 +99,14 @@ recipesRouter
   .post(
     authenticate,
     requestHandler(async (req, res) => {
-      const invalidInputs: InvalidInputsErrorInput[] = [];
+      const invalidInputsError = new InvalidInputsError();
 
       if (!req.body.name) {
-        invalidInputs.push({
-          name: "name",
-          message: "Required",
-        });
+        invalidInputsError.addInputError("name", "Required");
       }
 
-      if (invalidInputs.length > 0) {
-        res.status(400).json(new InvalidInputsError({ inputs: invalidInputs }));
+      if (invalidInputsError.hasInputErrors()) {
+        res.status(400).json(invalidInputsError);
         return;
       }
 
@@ -140,22 +128,16 @@ recipesRouter
   .patch(
     authenticate,
     requestHandler(async (req, res) => {
-      const invalidInputs: InvalidInputsErrorInput[] = [];
+      const invalidInputsError = new InvalidInputsError();
 
       if (!req.params.recipeId) {
-        invalidInputs.push({
-          name: "recipeId",
-          message: "Required",
-        });
+        invalidInputsError.addInputError("recipeId", "Required");
       } else if (!isValidObjectId(req.params.recipeId)) {
-        invalidInputs.push({
-          name: "recipeId",
-          message: "Invalid ObjectId",
-        });
+        invalidInputsError.addInputError("recipeId", "Invalid ObjectId");
       }
 
-      if (invalidInputs.length > 0) {
-        res.status(400).json(new InvalidInputsError({ inputs: invalidInputs }));
+      if (invalidInputsError.hasInputErrors()) {
+        res.status(400).json(invalidInputsError);
         return;
       }
 
@@ -180,31 +162,22 @@ recipesRouter
   .delete(
     authenticate,
     requestHandler(async (req, res) => {
-      const invalidInputs: InvalidInputsErrorInput[] = [];
+      const invalidInputsError = new InvalidInputsError();
 
       if (!res.locals.user?.id) {
-        invalidInputs.push({
-          name: "authorId",
-          message: "Required",
-        });
+        invalidInputsError.addInputError("authorId", "Required");
       }
 
       if (!req.params.recipeId) {
-        invalidInputs.push({
-          name: "recipeId",
-          message: "Required",
-        });
+        invalidInputsError.addInputError("recipeId", "Required");
       }
 
       if (!isValidObjectId(req.params.recipeId)) {
-        invalidInputs.push({
-          name: "recipeId",
-          message: "Invalid ObjectId",
-        });
+        invalidInputsError.addInputError("recipeId", "Invalid ObjectId");
       }
 
-      if (invalidInputs.length > 0) {
-        res.status(400).json(new InvalidInputsError({ inputs: invalidInputs }));
+      if (invalidInputsError.hasInputErrors()) {
+        res.status(400).json(invalidInputsError);
         return;
       }
 

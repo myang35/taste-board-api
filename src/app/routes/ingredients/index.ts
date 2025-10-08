@@ -37,12 +37,9 @@ ingredientsRouter
       if (!isValidObjectId(req.params.ingredientId)) {
         res.status(400).json(
           new InvalidInputsError({
-            inputs: [
-              {
-                name: "ingredientId",
-                message: "Invalid ObjectId",
-              },
-            ],
+            inputs: {
+              ingredientId: "Invalid ObjectId",
+            },
           })
         );
         return;
@@ -75,12 +72,9 @@ ingredientsRouter
       if (!req.params.ingredientId) {
         res.status(400).json(
           new InvalidInputsError({
-            inputs: [
-              {
-                name: "ingredientId",
-                message: "Required",
-              },
-            ],
+            inputs: {
+              ingredientId: "Required",
+            },
           })
         );
         return;
@@ -89,12 +83,9 @@ ingredientsRouter
       if (!isValidObjectId(req.params.ingredientId)) {
         res.status(400).json(
           new InvalidInputsError({
-            inputs: [
-              {
-                name: "ingredientId",
-                message: "Invalid ObjectId",
-              },
-            ],
+            inputs: {
+              ingredientId: "Invalid ObjectId",
+            },
           })
         );
         return;
@@ -127,12 +118,9 @@ ingredientsRouter
       if (!req.params.ingredientId) {
         res.status(400).json(
           new InvalidInputsError({
-            inputs: [
-              {
-                name: "ingredientId",
-                message: "Required",
-              },
-            ],
+            inputs: {
+              ingredientId: "Required",
+            },
           })
         );
         return;
@@ -141,12 +129,9 @@ ingredientsRouter
       if (!isValidObjectId(req.params.ingredientId)) {
         res.status(400).json(
           new InvalidInputsError({
-            inputs: [
-              {
-                name: "ingredientId",
-                message: "Invalid ObjectId",
-              },
-            ],
+            inputs: {
+              ingredientId: "Invalid ObjectId",
+            },
           })
         );
         return;

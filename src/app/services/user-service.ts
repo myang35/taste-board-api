@@ -36,6 +36,17 @@ export const userService = {
       new: true,
     }).lean();
   },
+  updateEmailById: async (id: Types.ObjectId | string, email: string) => {
+    return UserModel.findByIdAndUpdate(id, { email }, { new: true }).lean();
+  },
+  updatePasswordById: async (id: Types.ObjectId | string, password: string) => {
+    const hashPassword = await bcrypt.hash(password, 10);
+    return UserModel.findByIdAndUpdate(
+      id,
+      { password: hashPassword },
+      { new: true }
+    ).lean();
+  },
   deleteById: async (id: Types.ObjectId | string) => {
     return UserModel.findByIdAndDelete(id);
   },

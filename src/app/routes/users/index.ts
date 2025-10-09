@@ -43,7 +43,7 @@ usersRouter
     authenticate,
     requestHandler(async (req, res) => {
       if (!req.params.userId) {
-        res.json(
+        res.status(400).json(
           new InvalidInputsError({
             inputs: { userId: "Required" },
           })

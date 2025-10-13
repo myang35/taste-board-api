@@ -9,8 +9,6 @@ export const recipes = [
       "This dish features layers of creamy vanilla pudding, ripe banana slices, and crunchy vanilla wafers. The dessert strikes a perfect balance of textures, with the softness of the pudding and bananas contrasting the crunch of the wafers, which soften slightly as they absorb the pudding.",
     cookMinutes: 10,
     difficulty: 1,
-    imageUrl:
-      "https://www.southernliving.com/thmb/l5DQAyFyQ38FLwYjRLm49nLW0K0=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Banana_Pudding_022-2000-6a7f3ba402044e5488b429a7141097fa.jpg",
     tags: ["vegetarian", "dessert", "sweet", "easy"],
     ingredients: [
       {
@@ -70,8 +68,6 @@ export const recipes = [
       "A comforting and flavorful dish. It features soft, pillowy gnocchi cooked in a rich and tangy tomato sauce infused with the smoky and slightly spicy flavor of chorizo. The dish is topped with gooey, melted mozzarella cheese, which forms a golden crust when baked. It's often garnished with fresh herbs like basil or parsley for added color and aroma. This dish is a perfect combination of hearty, cheesy, and savory elements, making it an ideal option for a satisfying meal.",
     cookMinutes: 55,
     difficulty: 2,
-    imageUrl:
-      "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?resize=768,574",
     tags: ["italian", "cheesy", "dinner", "comfort food"],
     ingredients: [
       { name: "Gnocchi", amount: 500, unit: "gram", notes: "softened" },
@@ -130,8 +126,6 @@ export const recipes = [
       "This platter features a vibrant array of fresh and flavorful components often associated with Mediterranean cuisine. It offers a delightful mix of textures and flavors, ideal for sharing and enjoying as an appetizer or light meal.",
     cookMinutes: 30,
     difficulty: 1,
-    imageUrl:
-      "https://www.chasinglenscapes.com/wp-content/media/2020/06/food-photography-on-the-go-tips.jpg",
     tags: ["appetizer", "vegetarian", "shareable", "fresh"],
     ingredients: [
       { name: "Hummus", amount: 1, unit: "cup", notes: "" },
@@ -176,8 +170,6 @@ export const recipes = [
       "Garnished with freshly grated Parmesan cheese and a sprinkle of fresh parsley or basil, this comforting meal combines classic Italian flavors with a touch of indulgence.",
     cookMinutes: 45,
     difficulty: 2,
-    imageUrl:
-      "https://food.fnr.sndimg.com/content/dam/images/food/fullset/2016/6/12/3/FNM070116_Penne-with-Vodka-Sauce-and-Mini-Meatballs-recipe_s4x3.jpg.rend.hgtvcom.1280.1280.85.suffix/1465939620872.webp",
     tags: ["italian", "pasta", "dinner", "comfort food"],
     ingredients: [
       {
@@ -229,8 +221,6 @@ export const recipes = [
       "This dessert features a golden, slightly crisp exterior with a soft, fluffy, and cloud-like interior. Made with gluten-free flour and whipped egg whites, the cake achieves its signature texture and delicate sweetness without any gluten.",
     cookMinutes: 75,
     difficulty: 3,
-    imageUrl:
-      "https://meaningfuleats.com/wp-content/uploads/2013/08/gluten-free-angel-food-cake.jpg",
     tags: ["dessert", "gluten-free", "sweet", "baking"],
     ingredients: [
       { name: "Gluten-free flour", amount: 1.5, unit: "cup", notes: "" },

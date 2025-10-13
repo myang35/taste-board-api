@@ -3,12 +3,16 @@ import { InvalidInputsError } from "@src/app/errors/invalid-inputs-error";
 import { ResourceNotFoundError } from "@src/app/errors/resource-not-found-error";
 import { UnauthorizedError } from "@src/app/errors/unauthorized-error";
 import { authenticate } from "@src/app/middleware/authenticate";
+import { fileService } from "@src/app/services/file-service";
 import { recipeService } from "@src/app/services/recipe-service";
 import { userService } from "@src/app/services/user-service";
 import { requestHandler } from "@src/app/wrappers/request-handler";
 import { queryUtils } from "@src/utils/query-utils";
 import express from "express";
 import { isValidObjectId } from "mongoose";
+import multer from "multer";
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 export const recipesRouter = express.Router();
 
@@ -37,15 +41,23 @@ recipesRouter.route("/random/:size").get(
       return;
     }
 
-    const recipeDoc = await recipeService.getRandom(
+    const recipeDocs = await recipeService.getRandom(
       req.params.size ? parseInt(req.params.size) : 1
     );
-    if (!recipeDoc) {
+    if (!recipeDocs) {
       res.status(404).json(new ResourceNotFoundError({ resource: "recipe" }));
       return;
     }
 
-    const recipeDtos = recipeDoc.map(RecipeDto.fromDoc);
+    const imageUrls = await Promise.all(
+      recipeDocs.map(
+        (recipeDoc) =>
+          recipeDoc.imageKey && fileService.getImageUrl(recipeDoc.imageKey)
+      )
+    );
+    const recipeDtos = recipeDocs.map((recipeDoc, i) =>
+      RecipeDto.fromDoc(recipeDoc, imageUrls[i])
+    );
     res.json(recipeDtos);
   })
 );
@@ -71,7 +83,15 @@ recipesRouter
         };
 
         const recipeDocs = await recipeService.getAll(query);
-        const recipeDtos = recipeDocs.map(RecipeDto.fromDoc);
+        const imageUrls = await Promise.all(
+          recipeDocs.map(
+            (recipeDoc) =>
+              recipeDoc.imageKey && fileService.getImageUrl(recipeDoc.imageKey)
+          )
+        );
+        const recipeDtos = recipeDocs.map((recipeDoc, i) =>
+          RecipeDto.fromDoc(recipeDoc, imageUrls[i])
+        );
         res.json(recipeDtos);
         return;
       }
@@ -92,16 +112,21 @@ recipesRouter
         res.status(404).json(new ResourceNotFoundError({ resource: "recipe" }));
         return;
       }
-      const recipeDto = RecipeDto.fromDoc(recipeDoc);
+      const imageUrl =
+        recipeDoc.imageKey &&
+        (await fileService.getImageUrl(recipeDoc.imageKey));
+      const recipeDto = RecipeDto.fromDoc(recipeDoc, imageUrl);
       res.json(recipeDto);
     })
   )
   .post(
     authenticate,
+    upload.single("image"),
     requestHandler(async (req, res) => {
+      const data = JSON.parse(req.body.data);
       const invalidInputsError = new InvalidInputsError();
 
-      if (!req.body.name) {
+      if (!data.name) {
         invalidInputsError.addInputError("name", "Required");
       }
 
@@ -116,18 +141,23 @@ recipesRouter
         return;
       }
 
+      const imageKey =
+        req.file && (await fileService.storeImage(req.file, data.shared));
+
       const recipeDoc = await recipeService.create({
         authorId: authorDoc._id,
-        ...req.body,
+        imageKey,
+        ...data,
       });
 
-      const recipeDto = RecipeDto.fromDoc(recipeDoc);
-      res.json(recipeDto);
+      res.status(201).json({ id: recipeDoc.id });
     })
   )
   .patch(
     authenticate,
+    upload.single("image"),
     requestHandler(async (req, res) => {
+      const data = JSON.parse(req.body.data);
       const invalidInputsError = new InvalidInputsError();
 
       if (!req.params.recipeId) {
@@ -153,10 +183,35 @@ recipesRouter
         return;
       }
 
-      await recipeService.updateById(req.params.recipeId!, req.body);
+      if (data.shared !== recipeDoc.shared && recipeDoc.imageKey) {
+        data.shared
+          ? await fileService.moveToPublic(recipeDoc.imageKey)
+          : await fileService.moveToPrivate(recipeDoc.imageKey);
+      }
 
-      const recipeDto = RecipeDto.fromDoc(recipeDoc);
-      res.json(recipeDto);
+      const imageKey = await (async () => {
+        if (recipeDoc.imageKey) {
+          if (data.image === null) {
+            return fileService.deleteImage(recipeDoc.imageKey);
+          }
+          if (req.file) {
+            return fileService.updateImage(recipeDoc.imageKey, req.file);
+          }
+        } else {
+          if (req.file) {
+            return fileService.storeImage(req.file, { isPublic: data.shared });
+          }
+        }
+        return recipeDoc.imageKey;
+      })();
+
+      await recipeService.updateById(req.params.recipeId!, {
+        authorId: res.locals.user.id,
+        imageKey,
+        ...req.body,
+      });
+
+      res.status(204).send();
     })
   )
   .delete(
@@ -195,7 +250,6 @@ recipesRouter
 
       await recipeService.deleteById(req.params.recipeId!);
 
-      const recipeDto = RecipeDto.fromDoc(recipeDoc);
-      res.json(recipeDto);
+      res.status(204).send();
     })
   );

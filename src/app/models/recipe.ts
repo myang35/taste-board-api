@@ -32,7 +32,7 @@ export class Recipe extends TimeStamps implements Base {
   public difficulty?: number;
 
   @prop({ default: "" })
-  public imageUrl?: string;
+  public imageKey?: string;
 
   @prop({ type: () => [String], default: [] })
   public tags?: string[];

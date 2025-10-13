@@ -93,7 +93,7 @@ export class RecipeDto {
     this.updatedAt = params.updatedAt;
   }
 
-  static fromDoc(recipeDoc: Recipe) {
+  static fromDoc(recipeDoc: Recipe, imageUrl?: string) {
     if (!dbUtils.isPopulated(recipeDoc.author)) {
       throw new Error("Author is not populated");
     }
@@ -105,7 +105,7 @@ export class RecipeDto {
       description: recipeDoc.description ?? "",
       cookMinutes: recipeDoc.cookMinutes,
       difficulty: recipeDoc.difficulty,
-      imageUrl: recipeDoc.imageUrl ?? "",
+      imageUrl: imageUrl ?? "",
       tags: recipeDoc.tags ?? [],
       ingredients:
         recipeDoc.ingredients?.map((ingredient) => ({

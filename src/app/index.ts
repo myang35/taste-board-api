@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import { errorHandler } from "./middleware/error-handler";
+import { getAuth } from "./middleware/get-auth";
 import { authRouter } from "./routes/auth";
 import { ingredientsRouter } from "./routes/ingredients";
 import { recipesRouter } from "./routes/recipes";
@@ -18,6 +19,7 @@ app.use(
   })
 );
 app.use(cookieParser());
+app.use(getAuth);
 
 app.use("/auth", authRouter);
 app.use("/ingredients", ingredientsRouter);

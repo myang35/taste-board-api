@@ -2,7 +2,7 @@ import { RecipeDto } from "@src/app/dto/recipe-dto";
 import { InvalidInputsError } from "@src/app/errors/invalid-inputs-error";
 import { ResourceNotFoundError } from "@src/app/errors/resource-not-found-error";
 import { UnauthorizedError } from "@src/app/errors/unauthorized-error";
-import { authenticate } from "@src/app/middleware/authenticate";
+import { requireAuth } from "@src/app/middleware/require-auth";
 import { fileService } from "@src/app/services/file-service";
 import { recipeService } from "@src/app/services/recipe-service";
 import { userService } from "@src/app/services/user-service";
@@ -15,52 +15,6 @@ import multer from "multer";
 const upload = multer({ storage: multer.memoryStorage() });
 
 export const recipesRouter = express.Router();
-
-recipesRouter.route("/count").get(
-  requestHandler(async (req, res) => {
-    const query = {
-      search: queryUtils.toString(req.query.search),
-    };
-
-    const count = await recipeService.count(query);
-    res.json({ result: count });
-  })
-);
-
-recipesRouter.route("/random/:size").get(
-  requestHandler(async (req, res) => {
-    const size = Number.parseInt(req.params.size);
-    if (size <= 0 || Number.isNaN(size)) {
-      res.status(400).json(
-        new InvalidInputsError({
-          inputs: {
-            size: "Must be a positive integer",
-          },
-        })
-      );
-      return;
-    }
-
-    const recipeDocs = await recipeService.getRandom(
-      req.params.size ? parseInt(req.params.size) : 1
-    );
-    if (!recipeDocs) {
-      res.status(404).json(new ResourceNotFoundError({ resource: "recipe" }));
-      return;
-    }
-
-    const imageUrls = await Promise.all(
-      recipeDocs.map(
-        (recipeDoc) =>
-          recipeDoc.imageKey && fileService.getImageUrl(recipeDoc.imageKey)
-      )
-    );
-    const recipeDtos = recipeDocs.map((recipeDoc, i) =>
-      RecipeDto.fromDoc(recipeDoc, imageUrls[i])
-    );
-    res.json(recipeDtos);
-  })
-);
 
 recipesRouter
   .route("/:recipeId?")
@@ -120,7 +74,7 @@ recipesRouter
     })
   )
   .post(
-    authenticate,
+    requireAuth,
     upload.single("image"),
     requestHandler(async (req, res) => {
       const data = JSON.parse(req.body.data);
@@ -154,7 +108,7 @@ recipesRouter
     })
   )
   .patch(
-    authenticate,
+    requireAuth,
     upload.single("image"),
     requestHandler(async (req, res) => {
       const data = JSON.parse(req.body.data);
@@ -215,7 +169,7 @@ recipesRouter
     })
   )
   .delete(
-    authenticate,
+    requireAuth,
     requestHandler(async (req, res) => {
       const invalidInputsError = new InvalidInputsError();
 
@@ -253,3 +207,77 @@ recipesRouter
       res.status(204).send();
     })
   );
+
+recipesRouter.route("/:recipeId/views").post(
+  requestHandler(async (req, res) => {
+    const invalidInputsError = new InvalidInputsError();
+
+    if (!req.params.recipeId) {
+      invalidInputsError.addInputError("recipeId", "Required");
+    } else if (!isValidObjectId(req.params.recipeId)) {
+      invalidInputsError.addInputError("recipeId", "Invalid ObjectId");
+    }
+
+    if (invalidInputsError.hasInputErrors()) {
+      res.status(400).json(invalidInputsError);
+      return;
+    }
+
+    const recipeDoc = await recipeService.addView(
+      req.params.recipeId,
+      req.body.viewerId
+    );
+    if (!recipeDoc) {
+      res.status(404).json(new ResourceNotFoundError({ resource: "recipe" }));
+      return;
+    }
+
+    res.status(204).send();
+  })
+);
+
+recipesRouter.route("/count").get(
+  requestHandler(async (req, res) => {
+    const query = {
+      search: queryUtils.toString(req.query.search),
+    };
+
+    const count = await recipeService.count(query);
+    res.json({ result: count });
+  })
+);
+
+recipesRouter.route("/random/:size").get(
+  requestHandler(async (req, res) => {
+    const size = Number.parseInt(req.params.size);
+    if (size <= 0 || Number.isNaN(size)) {
+      res.status(400).json(
+        new InvalidInputsError({
+          inputs: {
+            size: "Must be a positive integer",
+          },
+        })
+      );
+      return;
+    }
+
+    const recipeDocs = await recipeService.getRandom(
+      req.params.size ? parseInt(req.params.size) : 1
+    );
+    if (!recipeDocs) {
+      res.status(404).json(new ResourceNotFoundError({ resource: "recipe" }));
+      return;
+    }
+
+    const imageUrls = await Promise.all(
+      recipeDocs.map(
+        (recipeDoc) =>
+          recipeDoc.imageKey && fileService.getImageUrl(recipeDoc.imageKey)
+      )
+    );
+    const recipeDtos = recipeDocs.map((recipeDoc, i) =>
+      RecipeDto.fromDoc(recipeDoc, imageUrls[i])
+    );
+    res.json(recipeDtos);
+  })
+);

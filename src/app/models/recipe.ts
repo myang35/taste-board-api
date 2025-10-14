@@ -94,8 +94,8 @@ export class Instruction {
 }
 
 export class View {
-  @prop({ ref: () => User, required: true })
-  public viewer!: Ref<User>;
+  @prop({ ref: () => User })
+  public viewer?: Ref<User>;
 
   @prop({ default: Date.now })
   public date?: Date;

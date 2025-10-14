@@ -2,7 +2,7 @@ import { UserDto } from "@src/app/dto/user-dto";
 import { InvalidInputsError } from "@src/app/errors/invalid-inputs-error";
 import { ResourceNotFoundError } from "@src/app/errors/resource-not-found-error";
 import { UnauthorizedError } from "@src/app/errors/unauthorized-error";
-import { authenticate } from "@src/app/middleware/authenticate";
+import { requireAuth } from "@src/app/middleware/require-auth";
 import { userService } from "@src/app/services/user-service";
 import { requestHandler } from "@src/app/wrappers/request-handler";
 import express from "express";
@@ -11,7 +11,7 @@ import { isValidObjectId } from "mongoose";
 export const usersRouter = express.Router();
 
 usersRouter.route("/:userId/email").patch(
-  authenticate,
+  requireAuth,
   requestHandler(async (req, res) => {
     const { newEmail, password } = req.body;
 
@@ -63,7 +63,7 @@ usersRouter.route("/:userId/email").patch(
 );
 
 usersRouter.route("/:userId/password").patch(
-  authenticate,
+  requireAuth,
   requestHandler(async (req, res) => {
     const { currentPassword, newPassword } = req.body;
 
@@ -146,7 +146,7 @@ usersRouter
     })
   )
   .patch(
-    authenticate,
+    requireAuth,
     requestHandler(async (req, res) => {
       if (!req.params.userId) {
         res.status(400).json(
@@ -187,7 +187,7 @@ usersRouter
     })
   )
   .delete(
-    authenticate,
+    requireAuth,
     requestHandler(async (req, res) => {
       if (!req.params.userId) {
         res.status(400).json(

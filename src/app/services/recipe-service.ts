@@ -201,12 +201,11 @@ export const recipeService = {
       fatGrams?: number;
       fiberGrams?: number;
       sugarGrams?: number;
-      viewCount?: number;
       notes?: string;
       shared?: boolean;
       views?: {
-        viewer: string;
-        date: number;
+        viewer?: Types.ObjectId | string;
+        date?: number;
       }[];
     }
   ) => {
@@ -229,7 +228,6 @@ export const recipeService = {
         fatGrams: recipe.fatGrams,
         fiberGrams: recipe.fiberGrams,
         sugarGrams: recipe.sugarGrams,
-        viewCount: recipe.viewCount,
         notes: recipe.notes,
         shared: recipe.shared,
         views: recipe.views,
@@ -238,6 +236,18 @@ export const recipeService = {
     )
       .populate("author")
       .lean();
+  },
+  addView: async (id: Types.ObjectId | string, viewerId?: Types.ObjectId) => {
+    const recipeDoc = await RecipeModel.findById(id);
+    if (!recipeDoc) return null;
+
+    const updatedViews = recipeDoc.views ?? [];
+    updatedViews.push({ viewer: viewerId });
+
+    recipeDoc.views = updatedViews;
+    const updatedRecipeDoc = await recipeDoc.save();
+
+    return updatedRecipeDoc.populate("author");
   },
   count: async (options?: { search?: string }) => {
     return RecipeModel.countDocuments({

@@ -162,7 +162,7 @@ recipesRouter
       await recipeService.updateById(req.params.recipeId!, {
         authorId: res.locals.user.id,
         imageKey,
-        ...req.body,
+        ...data,
       });
 
       res.status(204).send();

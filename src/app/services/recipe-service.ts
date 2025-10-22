@@ -117,7 +117,14 @@ export const recipeService = {
     return RecipeModel.findById(id).populate("author").lean();
   },
   getRandom: async (size: number) => {
-    const recipeDocs = await RecipeModel.aggregate([{ $sample: { size } }]);
+    const recipeDocs = await RecipeModel.aggregate([
+      {
+        $match: { shared: true },
+      },
+      {
+        $sample: { size },
+      },
+    ]);
     if (recipeDocs.length === 0) return null;
     return RecipeModel.populate(recipeDocs, { path: "author" });
   },

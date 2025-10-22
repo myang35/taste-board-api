@@ -25,4 +25,23 @@ export const queryUtils = {
     }
     return parseInt(value);
   },
+  toBoolean: (query: Request["query"][string]) => {
+    let value;
+    if (query instanceof Array) {
+      value = query[0];
+    } else {
+      value = query;
+    }
+    if (typeof value !== "string") {
+      return undefined;
+    }
+    switch (value) {
+      case "true":
+        return true;
+      case "false":
+        return false;
+      default:
+        return undefined;
+    }
+  },
 };

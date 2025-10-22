@@ -34,6 +34,7 @@ recipesRouter
           limit: queryUtils.toInt(req.query.limit),
           skip: queryUtils.toInt(req.query.skip),
           userId: queryUtils.toString(req.query.userId),
+          shared: queryUtils.toBoolean(req.query.shared),
         };
 
         const recipeDocs = await recipeService.getAll(query);

@@ -10,6 +10,7 @@ export const recipeService = {
     limit?: number;
     skip?: number;
     userId?: string;
+    shared?: boolean;
   }) => {
     const oneMonthAgo = dateUtils.createDateAfter(-1000 * 60 * 60 * 24 * 30);
     const pipelineStages: PipelineStage[] = [
@@ -29,6 +30,10 @@ export const recipeService = {
               },
             },
           ],
+          shared:
+            options?.shared !== undefined
+              ? options.shared
+              : { $in: [true, false] },
         },
       },
     ];

@@ -133,7 +133,6 @@ export const recipeService = {
     name: string;
     servings?: number;
     description?: string;
-    cookMinutes?: number;
     difficulty?: number;
     imageKey?: string;
     tags?: string[];
@@ -164,7 +163,6 @@ export const recipeService = {
       name: recipe.name,
       servings: recipe.servings,
       description: recipe.description,
-      cookMinutes: recipe.cookMinutes,
       difficulty: recipe.difficulty,
       imageKey: recipe.imageKey,
       tags: recipe.tags,
@@ -193,7 +191,6 @@ export const recipeService = {
       name?: string;
       servings?: number;
       description?: string;
-      cookMinutes?: number;
       difficulty?: number;
       imageKey?: string;
       tags?: string[];
@@ -228,7 +225,6 @@ export const recipeService = {
         name: recipe.name,
         servings: recipe.servings,
         description: recipe.description,
-        cookMinutes: recipe.cookMinutes,
         difficulty: recipe.difficulty,
         imageKey: recipe.imageKey,
         tags: recipe.tags,

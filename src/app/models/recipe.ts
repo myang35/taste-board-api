@@ -26,9 +26,6 @@ export class Recipe extends TimeStamps implements Base {
   public description?: string;
 
   @prop()
-  public cookMinutes?: number;
-
-  @prop()
   public difficulty?: number;
 
   @prop({ default: "" })

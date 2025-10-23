@@ -103,7 +103,9 @@ export class RecipeDto {
       name: recipeDoc.name,
       servings: recipeDoc.servings,
       description: recipeDoc.description ?? "",
-      cookMinutes: recipeDoc.cookMinutes,
+      cookMinutes: recipeDoc.instructions
+        ?.map((i) => i.minutes ?? 0)
+        .reduce((a, b) => a + b, 0),
       difficulty: recipeDoc.difficulty,
       imageUrl: imageUrl ?? "",
       tags: recipeDoc.tags ?? [],

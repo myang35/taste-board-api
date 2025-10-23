@@ -85,6 +85,42 @@ recipesRouter
         invalidInputsError.addInputError("name", "Required");
       }
 
+      for (const [index, ingredient] of Object.entries(data.ingredients)) {
+        if (!(ingredient as any).name) {
+          invalidInputsError.addInputError(
+            `ingredients.${index}.name`,
+            "Required"
+          );
+        }
+        if (!(ingredient as any).amount) {
+          invalidInputsError.addInputError(
+            `ingredients.${index}.amount`,
+            "Required"
+          );
+        }
+        if ((ingredient as any).amount < 0) {
+          invalidInputsError.addInputError(
+            `ingredients.${index}.amount`,
+            "Must be a postive number"
+          );
+        }
+        if (!(ingredient as any).unit) {
+          invalidInputsError.addInputError(
+            `ingredients.${index}.unit`,
+            "Required"
+          );
+        }
+      }
+
+      for (const [index, instruction] of Object.entries(data.instructions)) {
+        if (!(instruction as any).description) {
+          invalidInputsError.addInputError(
+            `instructions.${index}.description`,
+            "Required"
+          );
+        }
+      }
+
       if (invalidInputsError.hasInputErrors()) {
         res.status(400).json(invalidInputsError);
         return;
@@ -119,6 +155,42 @@ recipesRouter
         invalidInputsError.addInputError("recipeId", "Required");
       } else if (!isValidObjectId(req.params.recipeId)) {
         invalidInputsError.addInputError("recipeId", "Invalid ObjectId");
+      }
+
+      for (const [index, ingredient] of Object.entries(data.ingredients)) {
+        if (!(ingredient as any).name) {
+          invalidInputsError.addInputError(
+            `ingredients.${index}.name`,
+            "Required"
+          );
+        }
+        if (!(ingredient as any).amount) {
+          invalidInputsError.addInputError(
+            `ingredients.${index}.amount`,
+            "Required"
+          );
+        }
+        if ((ingredient as any).amount < 0) {
+          invalidInputsError.addInputError(
+            `ingredients.${index}.amount`,
+            "Must be a postive number"
+          );
+        }
+        if (!(ingredient as any).unit) {
+          invalidInputsError.addInputError(
+            `ingredients.${index}.unit`,
+            "Required"
+          );
+        }
+      }
+
+      for (const [index, instruction] of Object.entries(data.instructions)) {
+        if (!(instruction as any).description) {
+          invalidInputsError.addInputError(
+            `instructions.${index}.description`,
+            "Required"
+          );
+        }
       }
 
       if (invalidInputsError.hasInputErrors()) {

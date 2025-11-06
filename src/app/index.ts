@@ -21,6 +21,9 @@ app.use(
 app.use(cookieParser());
 app.use(getAuth);
 
+app.get("/", (req, res) => {
+  res.send("Taste Board API is running!");
+});
 app.use("/auth", authRouter);
 app.use("/ingredients", ingredientsRouter);
 app.use("/recipes", recipesRouter);

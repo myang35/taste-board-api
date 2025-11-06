@@ -52,7 +52,7 @@ authRouter
 
       res.cookie("refreshToken", refreshToken.value, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: req.secure,
         sameSite: "strict",
         expires: refreshToken.expireAt,
       });
@@ -100,7 +100,7 @@ authRouter
 
       res.cookie("refreshToken", refreshToken.value, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: req.secure,
         sameSite: "strict",
         expires: refreshToken.expireAt,
       });

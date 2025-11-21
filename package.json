@@ -5,7 +5,9 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production ts-node src/server.ts",
     "dev": "cross-env NODE_ENV=development nodemon src/server.ts",
-    "seed": "ts-node scripts/seed"
+    "seed": "ts-node scripts/seed",
+    "docker-build": "docker buildx build --platform linux/amd64,linux/arm64 -t myang35/taste-board-api .",
+    "docker-push": "docker push myang35/taste-board-api"
   },
   "keywords": [],
   "author": "",

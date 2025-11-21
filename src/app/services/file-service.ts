@@ -12,7 +12,7 @@ import sharp from "sharp";
 export const fileService = {
   getImageUrl: async (key: string) => {
     if (key.startsWith("public/")) {
-      return normalize(`${config.s3BucketUrl}/${key}`);
+      return normalizeUrl(`${config.s3BucketUrl}/${key}`);
     }
     return createPresignedUrl(key);
   },
@@ -108,4 +108,9 @@ async function resizeImage(buffer: Buffer) {
   return sharp(buffer)
     .resize({ width: 1920, height: 1080, fit: "cover" })
     .toBuffer();
+}
+
+function normalizeUrl(url: string) {
+  const urlObj = new URL(url);
+  return urlObj.href;
 }

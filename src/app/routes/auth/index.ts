@@ -12,12 +12,12 @@ authRouter
   .post(
     "/login",
     requestHandler(async (req, res) => {
-      const { email, password } = req.body;
+      const { username, password } = req.body;
 
       const invalidInputsError = new InvalidInputsError();
 
-      if (!email) {
-        invalidInputsError.addInputError("email", "Required");
+      if (!username) {
+        invalidInputsError.addInputError("username", "Required");
       }
 
       if (!password) {
@@ -29,7 +29,7 @@ authRouter
         return;
       }
 
-      const userDoc = await userService.getByEmail(email);
+      const userDoc = await userService.getByUsername(username);
       if (!userDoc) {
         res.status(404).json(new InvalidCredentialsError());
         return;
@@ -62,7 +62,7 @@ authRouter
   .post(
     "/signup",
     requestHandler(async (req, res) => {
-      const { name, email, password } = req.body;
+      const { name, username, password } = req.body;
 
       const invalidInputsError = new InvalidInputsError();
 
@@ -70,13 +70,16 @@ authRouter
         invalidInputsError.addInputError("name", "Required");
       }
 
-      if (email) {
-        const existingUserDoc = await userService.getByEmail(email);
+      if (username) {
+        const existingUserDoc = await userService.getByUsername(username);
         if (existingUserDoc) {
-          invalidInputsError.addInputError("email", "Email is already in use");
+          invalidInputsError.addInputError(
+            "username",
+            "Username is already in use"
+          );
         }
       } else {
-        invalidInputsError.addInputError("email", "Required");
+        invalidInputsError.addInputError("username", "Required");
       }
 
       if (!password) {
@@ -89,7 +92,7 @@ authRouter
 
       const userDoc = await userService.create({
         name,
-        email,
+        username,
         password,
       });
       const [refreshToken, accessToken] = await Promise.all([

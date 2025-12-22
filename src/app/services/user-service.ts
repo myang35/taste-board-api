@@ -14,14 +14,18 @@ export const userService = {
   getById: async (id: Types.ObjectId | string) => {
     return UserModel.findById(id).lean();
   },
-  getByEmail: async (email: string) => {
-    return UserModel.findOne({ email }).lean();
+  getByUsername: async (username: string) => {
+    return UserModel.findOne({ username }).lean();
   },
-  create: async (user: { name: string; email: string; password: string }) => {
+  create: async (user: {
+    name: string;
+    username: string;
+    password: string;
+  }) => {
     const hashPassword = await bcrypt.hash(user.password, 10);
     return UserModel.create({
       name: user.name,
-      email: user.email,
+      username: user.username,
       password: hashPassword,
     });
   },
@@ -36,8 +40,8 @@ export const userService = {
       new: true,
     }).lean();
   },
-  updateEmailById: async (id: Types.ObjectId | string, email: string) => {
-    return UserModel.findByIdAndUpdate(id, { email }, { new: true }).lean();
+  updateUsernameById: async (id: Types.ObjectId | string, username: string) => {
+    return UserModel.findByIdAndUpdate(id, { username }, { new: true }).lean();
   },
   updatePasswordById: async (id: Types.ObjectId | string, password: string) => {
     const hashPassword = await bcrypt.hash(password, 10);

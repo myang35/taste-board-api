@@ -10,10 +10,10 @@ import { isValidObjectId } from "mongoose";
 
 export const usersRouter = express.Router();
 
-usersRouter.route("/:userId/email").patch(
+usersRouter.route("/:userId/username").patch(
   requireAuth,
   requestHandler(async (req, res) => {
-    const { newEmail, password } = req.body;
+    const { newUsername, password } = req.body;
 
     const userDoc = await userService.getById(req.params.userId);
     if (!userDoc) {
@@ -22,20 +22,19 @@ usersRouter.route("/:userId/email").patch(
     }
 
     if (res.locals.user.id !== req.params.userId) {
-      res.status(403).json(
-        new UnauthorizedError({
-          message: "You can only update your own email",
-        })
-      );
+      res.status(403).json(new UnauthorizedError());
       return;
     }
 
     const invalidInputsError = new InvalidInputsError();
 
-    if (!newEmail) {
-      invalidInputsError.addInputError("newEmail", "Required");
-    } else if (await userService.getByEmail(newEmail)) {
-      invalidInputsError.addInputError("newEmail", "Email is already in use");
+    if (!newUsername) {
+      invalidInputsError.addInputError("newUsername", "Required");
+    } else if (await userService.getByUsername(newUsername)) {
+      invalidInputsError.addInputError(
+        "newUsername",
+        "Username is already in use"
+      );
     }
 
     if (!password) {
@@ -49,9 +48,9 @@ usersRouter.route("/:userId/email").patch(
       return;
     }
 
-    const updatedUserDoc = await userService.updateEmailById(
+    const updatedUserDoc = await userService.updateUsernameById(
       req.params.userId,
-      newEmail
+      newUsername
     );
     if (!updatedUserDoc) {
       res.status(404).json(new ResourceNotFoundError({ resource: "user" }));
@@ -75,11 +74,7 @@ usersRouter.route("/:userId/password").patch(
     }
 
     if (res.locals.user.id !== req.params.userId) {
-      res.status(403).json(
-        new UnauthorizedError({
-          message: "You can only update your own email",
-        })
-      );
+      res.status(403).json(new UnauthorizedError());
       return;
     }
 

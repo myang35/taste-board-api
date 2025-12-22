@@ -8,13 +8,13 @@ export class User extends TimeStamps implements Base {
   public id!: string;
 
   @prop({ required: true })
-  public email!: string;
+  public username!: string;
 
   @prop({ required: true })
   public password!: string;
 
-  @prop()
-  public name?: string;
+  @prop({ required: true })
+  public name!: string;
 
   @prop()
   public imageUrl?: string;

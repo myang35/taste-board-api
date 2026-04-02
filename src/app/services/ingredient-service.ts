@@ -1,4 +1,4 @@
-import { IngredientModel } from "@src/app/models/ingredient";
+import { IngredientModel } from "../models/ingredient";
 import { Types } from "mongoose";
 
 export const ingredientService = {

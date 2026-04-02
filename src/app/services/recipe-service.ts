@@ -1,5 +1,5 @@
-import { RecipeModel } from "@src/app/models/recipe";
-import { dateUtils } from "@src/utils/date-utils";
+import { RecipeModel } from "../models/recipe";
+import { dateUtils } from "../../utils/date-utils";
 import { ObjectId } from "mongodb";
 import { PipelineStage, Types } from "mongoose";
 

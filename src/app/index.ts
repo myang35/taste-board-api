@@ -1,4 +1,4 @@
-import { config } from "@src/config";
+import { config } from "../config";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";

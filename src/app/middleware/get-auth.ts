@@ -1,4 +1,4 @@
-import { config } from "@src/config";
+import { config } from "../../config";
 import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 import { requestHandler } from "../wrappers/request-handler";

@@ -1,4 +1,4 @@
-import { stringUtils } from "@src/utils/string-utils";
+import { stringUtils } from "../../utils/string-utils";
 import { BaseError } from "./base-error";
 
 export class ResourceNotFoundError extends BaseError {

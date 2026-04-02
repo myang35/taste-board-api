@@ -1,8 +1,8 @@
-import { IngredientDto } from "@src/app/dto/ingredient-dto";
-import { InvalidInputsError } from "@src/app/errors/invalid-inputs-error";
-import { ResourceNotFoundError } from "@src/app/errors/resource-not-found-error";
-import { ingredientService } from "@src/app/services/ingredient-service";
-import { requestHandler } from "@src/app/wrappers/request-handler";
+import { IngredientDto } from "../../dto/ingredient-dto";
+import { InvalidInputsError } from "../../errors/invalid-inputs-error";
+import { ResourceNotFoundError } from "../../errors/resource-not-found-error";
+import { ingredientService } from "../../services/ingredient-service";
+import { requestHandler } from "../../wrappers/request-handler";
 import express from "express";
 import { isValidObjectId } from "mongoose";
 

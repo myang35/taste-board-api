@@ -1,10 +1,9 @@
 import "dotenv/config";
-import "module-alias/register";
 
-import { IngredientModel } from "@src/app/models/ingredient";
-import { RecipeModel } from "@src/app/models/recipe";
-import { UserModel } from "@src/app/models/user";
-import { config } from "@src/config";
+import { IngredientModel } from "../../src/app/models/ingredient";
+import { RecipeModel } from "../../src/app/models/recipe";
+import { UserModel } from "../../src/app/models/user";
+import { config } from "../../src/config";
 import mongoose from "mongoose";
 import { ingredients } from "./ingredients";
 import { recipes } from "./recipes";

@@ -1,10 +1,10 @@
-import { UserDto } from "@src/app/dto/user-dto";
-import { InvalidInputsError } from "@src/app/errors/invalid-inputs-error";
-import { ResourceNotFoundError } from "@src/app/errors/resource-not-found-error";
-import { UnauthorizedError } from "@src/app/errors/unauthorized-error";
-import { requireAuth } from "@src/app/middleware/require-auth";
-import { userService } from "@src/app/services/user-service";
-import { requestHandler } from "@src/app/wrappers/request-handler";
+import { UserDto } from "../../dto/user-dto";
+import { InvalidInputsError } from "../../errors/invalid-inputs-error";
+import { ResourceNotFoundError } from "../../errors/resource-not-found-error";
+import { UnauthorizedError } from "../../errors/unauthorized-error";
+import { requireAuth } from "../../middleware/require-auth";
+import { userService } from "../../services/user-service";
+import { requestHandler } from "../../wrappers/request-handler";
 import express from "express";
 import { isValidObjectId } from "mongoose";
 

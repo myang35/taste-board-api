@@ -1,9 +1,9 @@
-import { UserDto } from "@src/app/dto/user-dto";
-import { InvalidCredentialsError } from "@src/app/errors/invalid-credentials-error";
-import { InvalidInputsError } from "@src/app/errors/invalid-inputs-error";
-import { UnauthenticatedError } from "@src/app/errors/unauthenticated-error";
-import { userService } from "@src/app/services/user-service";
-import { requestHandler } from "@src/app/wrappers/request-handler";
+import { UserDto } from "../../dto/user-dto";
+import { InvalidCredentialsError } from "../../errors/invalid-credentials-error";
+import { InvalidInputsError } from "../../errors/invalid-inputs-error";
+import { UnauthenticatedError } from "../../errors/unauthenticated-error";
+import { userService } from "../../services/user-service";
+import { requestHandler } from "../../wrappers/request-handler";
 import express from "express";
 
 export const authRouter = express.Router();

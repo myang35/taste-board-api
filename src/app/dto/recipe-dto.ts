@@ -1,4 +1,4 @@
-import { dbUtils } from "@src/utils/db-utils";
+import { dbUtils } from "../../utils/db-utils";
 import { Recipe } from "../models/recipe";
 import { UserDto } from "./user-dto";
 

@@ -1,4 +1,4 @@
-import { config } from "@src/config";
+import { config } from "../config";
 import mongoose from "mongoose";
 
 export async function dbConnect() {

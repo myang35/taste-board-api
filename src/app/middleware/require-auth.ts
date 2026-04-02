@@ -1,4 +1,4 @@
-import { UnauthenticatedError } from "@src/app/errors/unauthenticated-error";
+import { UnauthenticatedError } from "../errors/unauthenticated-error";
 import { RequestHandler } from "express";
 import { requestHandler } from "../wrappers/request-handler";
 

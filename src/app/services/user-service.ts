@@ -1,8 +1,8 @@
-import { UserDto } from "@src/app/dto/user-dto";
-import { RefreshTokenModel } from "@src/app/models/refresh-token";
-import { User, UserModel } from "@src/app/models/user";
-import { config } from "@src/config";
-import { dateUtils } from "@src/utils/date-utils";
+import { UserDto } from "../dto/user-dto";
+import { RefreshTokenModel } from "../models/refresh-token";
+import { User, UserModel } from "../models/user";
+import { config } from "../../config";
+import { dateUtils } from "../../utils/date-utils";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Types } from "mongoose";
